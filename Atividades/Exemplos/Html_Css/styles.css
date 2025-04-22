@@ -1,0 +1,270 @@
+/* 
+   SELETORES BÁSICOS  
+   Estes seletores aplicam estilos básicos aos elementos principais da página.
+*/
+
+body {
+    /* Define a fonte padrão do site como Arial, com fallback para sans-serif */
+    font-family: Arial, sans-serif; 
+    
+    /* Define a cor do texto como um tom de cinza escuro */
+    color: #333; 
+    
+    /* Remove margens e preenchimentos padrões do body */
+    margin: 0;
+    padding: 0;
+    
+    /* Define um fundo cinza claro para o site */
+    background-color: #f5f5f5; 
+}
+
+h1 {
+    /* Define a cor do título principal como azul escuro */
+    color: black; 
+}
+
+h2 {
+    /* Define a cor dos subtítulos para um tom intermediário de azul */
+    color: #34495e; 
+}
+
+p {
+    /* Ajusta o tamanho da fonte para 16px */
+    font-size: 16px; 
+    
+    /* Define o espaçamento entre linhas para melhorar a legibilidade */
+    line-height: 1.5; 
+}
+
+/* 
+   SELETORES DE CLASSE  
+   Permitem estilizar elementos específicos utilizando a classe definida.
+*/
+
+.destaque {
+    /* Define a cor do texto como vermelho */
+    color: #e74c3c; 
+    
+    /* Aplica negrito ao texto */
+    font-weight: bold; 
+}
+
+/* 
+   SELETORES DE ID  
+   Aplicam estilos exclusivos a um único elemento por vez.
+*/
+
+#notas {
+    /* Define um fundo cinza claro para a seção de notas */
+    background-color: #ecf0f1; 
+    
+    /* Aplica um preenchimento interno para melhor espaçamento */
+    padding: 20px;
+    
+    /* Arredonda as bordas do contêiner */
+    border-radius: 10px;
+}
+
+/* 
+   Cores e Background  
+   Define estilos para o cabeçalho e a navegação.
+*/
+
+header {
+    /* Define um fundo amarelo para o cabeçalho */
+    background-color: #feeca3; 
+    
+    /* Define a cor do texto como branco */
+    color: white;
+    
+    /* Adiciona espaçamento interno */
+    padding: 20px;
+    
+    /* Centraliza o texto */
+    text-align: center;
+}
+
+/* Remove os estilos padrão da lista de navegação */
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* 
+   Define o layout dos itens do menu de navegação 
+   para que fiquem na mesma linha.
+*/
+nav ul li {
+    display: inline;
+    margin-right: 15px;
+}
+
+/* 
+   Estiliza os links do menu de navegação.
+*/
+nav ul li a {
+    /* Define a cor do texto como branco */
+    color: #2c3e50;
+    
+    /* Remove o sublinhado */
+    text-decoration: none;
+    
+    /* Aplica negrito ao texto */
+    font-weight: bold;
+}
+
+/* 
+   Tipografia e Texto  
+   Estiliza botões para uma aparência padronizada.
+*/
+
+button {
+    /* Define um fundo verde */
+    background-color: #2ecc71; 
+    
+    /* Define a cor do texto como branco */
+    color: white;
+    
+    /* Remove a borda padrão */
+    border: none;
+    
+    /* Adiciona espaçamento interno */
+    padding: 10px 20px;
+    
+    /* Ajusta o tamanho da fonte */
+    font-size: 16px;
+    
+    /* Altera o cursor ao passar sobre o botão */
+    cursor: pointer;
+}
+
+/* 
+   Define um efeito ao passar o mouse sobre o botão,
+   mudando a cor para um verde mais escuro.
+*/
+
+button:hover {
+    background-color: #27ae60; 
+}
+
+/* 
+   Espaçamentos  
+   Define margens e preenchimentos para seções da página.
+*/
+
+section {
+    /* Adiciona margem para espaçamento entre seções */
+    margin: 20px;
+    
+    /* Adiciona preenchimento interno */
+    padding: 15px;
+    
+    /* Define um fundo branco */
+    background: white;
+    
+    /* Arredonda as bordas */
+    border-radius: 8px;
+}
+
+/* 
+   Box Model aplicado às seções  
+   Aplica estilos adicionais para estruturar seções e barras laterais.
+*/
+
+section, aside {
+    /* Adiciona espaçamento interno */
+    padding: 20px;
+    
+    /* Define margens para alinhamento centralizado */
+    margin: 15px auto;
+    
+    /* Define a largura máxima das seções */
+    width: 80%;
+    
+    /* Adiciona uma borda sutil */
+    border: 1px solid #ddd;
+    
+    /* Adiciona um leve efeito de sombra */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 
+   Posição e Alinhamento  
+   Estiliza o rodapé para que fique fixo na parte inferior.
+*/
+
+footer {
+    /* Centraliza o texto */
+    text-align: center;
+    
+    /* Adiciona espaçamento interno */
+    padding: 10px;
+    
+    /* Define um fundo escuro */
+    background-color: #2c3e50;
+    
+    /* Define a cor do texto como branco */
+    color: white;
+    
+    /* Mantém o rodapé posicionado na parte inferior */
+    position: relative;
+    
+    /* Garante que o rodapé ocupe toda a largura */
+    width: 100%;
+}
+
+/* 
+   Trabalhando no alinhamento dos formulários  
+   Define o layout e espaçamento dos elementos do formulário.
+*/
+
+form {
+    /* Usa flexbox para organizar os elementos verticalmente */
+    display: flex;
+    flex-direction: column;
+    
+    /* Adiciona espaçamento entre os elementos do formulário */
+    gap: 10px;
+    
+    /* Define uma largura máxima para os formulários */
+    max-width: 600px;
+    
+    /* Centraliza o formulário na página */
+    margin: auto;
+}
+
+/* 
+   Para alinhar corretamente os rótulos dentro dos formulários.
+*/
+form label {
+    /* Define os rótulos como negrito */
+    font-weight: bold;
+}
+
+/* 
+   Estiliza os campos de entrada, área de texto e seleção.
+*/
+form input,
+form textarea,
+form select {
+    /* Adiciona preenchimento para melhor legibilidade */
+    padding: 8px;
+    
+    /* Define uma borda sutil */
+    border: 1px solid #ccc;
+    
+    /* Arredonda levemente as bordas */
+    border-radius: 5px;
+}
+
+/* 
+   Ajuste para o botão dentro dos formulários  
+   Mantém o alinhamento e espaçamento adequado.
+*/
+form button {
+    /* Mantém a largura ajustada ao conteúdo */
+    width: auto;
+    
+    /* Adiciona espaçamento interno */
+    padding: 10px 20px;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- Declaração do tipo de documento HTML5, essencial para que os navegadores interpretem corretamente o código -->
+<html lang="pt-BR"> <!-- Define o idioma da página como português do Brasil, ajudando em acessibilidade e SEO -->
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Define a codificação de caracteres como UTF-8, garantindo suporte a acentos e caracteres especiais -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Configura a escala inicial para dispositivos móveis, garantindo um layout responsivo -->
+    <title>NoteEng - Notas e Feedback</title> <!-- Define o título que será exibido na aba do navegador -->
+    <link rel="stylesheet" href="styles.css"> <!-- Importa um arquivo CSS externo para estilização da página -->
+</head>
+
+<body>
+    <header> <!-- Cabeçalho da página, geralmente contém o título e navegação principal -->
+        <h1>NoteEng</h1> <!-- Título principal do site, geralmente com maior destaque -->
+        <nav> <!-- Seção de navegação, usada para organizar links importantes -->
+            <ul> <!-- Lista não ordenada que contém os links de navegação -->
+                <li><a href="#notas">Minhas Notas</a></li> <!-- Link âncora que direciona para a seção de notas -->
+                <li><a href="#feedback">Feedback</a></li> <!-- Link âncora que leva para a seção de feedback -->
+                <li><a href="#discussao">Discussão</a></li> <!-- Link âncora que permite acesso à seção de discussão -->
+            </ul>
+        </nav>
+    </header>
+
+    <section id="notas"> <!-- Seção dedicada às anotações dos alunos -->
+        <h2>Minhas Notas</h2> <!-- Título secundário para indicar o conteúdo da seção -->
+        <form> <!-- Formulário para entrada de novas anotações -->
+            <label for="nota">Digite sua anotação:</label> <!-- Texto explicativo vinculado ao campo de entrada -->
+            <textarea id="nota" name="nota" rows="4" placeholder="Escreva suas notas sobre a aula..."></textarea>
+            <!-- Campo de texto multilinha para entrada de anotações -->
+            <button type="submit">Salvar</button> <!-- Botão para salvar a anotação -->
+        </form>
+        <ul> <!-- Lista não ordenada para exibir as anotações salvas -->
+            <li><strong>20/03/2025:</strong> Aula sobre HTML semântico foi muito interessante!</li>
+            <!-- Exemplo de anotação pré-salva -->
+        </ul>
+    </section>
+
+    <section id="feedback"> <!-- Seção onde os alunos podem avaliar a aula -->
+        <h2>Feedback da Aula</h2> <!-- Título secundário para indicar a função da seção -->
+        <form> <!-- Formulário para envio de avaliações e comentários -->
+            <label for="avaliacao">Como você avaliaria a aula?</label>
+            <!-- Rótulo explicativo vinculado ao menu suspenso -->
+            <select id="avaliacao" name="avaliacao"> <!-- Menu suspenso com opções de avaliação -->
+                <option value="excelente">Excelente</option> <!-- Opção de avaliação positiva -->
+                <option value="bom">Bom</option>
+                <option value="regular">Regular</option>
+                <option value="ruim">Ruim</option> <!-- Opção de avaliação negativa -->
+            </select>
+
+            <label for="comentario">Comentários adicionais:</label> <!-- Rótulo que orienta a escrita de comentários -->
+            <textarea id="comentario" name="comentario" rows="3" placeholder="O que pode melhorar?"></textarea>
+            <!-- Campo de texto multilinha para sugestões -->
+
+            <button type="submit">Enviar Feedback</button> <!-- Botão para submeter a avaliação -->
+        </form>
+    </section>
+
+    <aside id="discussao"> <!-- Seção complementar para discussões e perguntas -->
+        <h2>Discussão</h2> <!-- Título secundário para indicar a função da seção -->
+        <p>Compartilhe suas dúvidas e ideias sobre a aula.</p> <!-- Pequena descrição do propósito da seção -->
+        <form> <!-- Formulário para publicação de perguntas e comentários -->
+            <label for="pergunta">Faça uma pergunta ou comentário:</label>
+            <!-- Texto explicativo vinculado ao campo de entrada -->
+            <textarea id="pergunta" name="pergunta" rows="3"></textarea>
+            <!-- Campo de texto para interação entre alunos -->
+            <button type="submit">Publicar</button> <!-- Botão para submeter o comentário -->
+        </form>
+        <ul> <!-- Lista não ordenada para exibir as perguntas publicadas -->
+            <li><strong>João:</strong> Como o HTML5 melhora a acessibilidade?</li>
+            <!-- Exemplo de interação de um usuário -->
+        </ul>
+    </aside>
+
+    <footer> <!-- Rodapé da página, geralmente contém informações adicionais -->
+        <p>&copy; 2025 NoteEng - Um projeto para auxiliar no aprendizado.</p>
+        <!-- Texto de direitos autorais e propósito do site -->
+    </footer>
+</body>
+
+</html

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteEng - Notas e Feedback</title>
+    <link rel="stylesheet" href="Aula 04 - estilo.css">
+</head>
+<body>
+    <header>
+        <h1 id="titulo-principal">NoteEng</h1>
+        <nav>
+            <ul>
+                <li><a href="#notas">Minhas Notas</a></li>
+                <li><a href="#feedback">Feedback</a></li>
+                <li><a href="#discussao">Discussão</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="notas">
+        <h2>Minhas Notas</h2>
+        <form onsubmit="salvarNota(event)">
+            <label for="nota">Digite sua anotação:</label>
+            <textarea id="nota" name="nota" rows="4" placeholder="Escreva suas notas sobre a aula..."></textarea>
+            <button type="submit">Salvar</button>
+        </form>
+        <ul id="lista-notas">
+            <li><strong>20/03/2025:</strong> Aula sobre HTML semântico foi muito interessante!</li>
+        </ul>
+    </section>
+
+    <section id="feedback">
+        <h2>Feedback da Aula</h2>
+        <form onsubmit="enviarFeedback(event)">
+            <label for="avaliacao">Como você avaliaria a aula?</label>
+            <select id="avaliacao" name="avaliacao">
+                <option value="excelente">Excelente</option>
+                <option value="bom">Bom</option>
+                <option value="regular">Regular</option>
+                <option value="ruim">Ruim</option>
+            </select>
+
+            <label for="comentario">Comentários adicionais:</label>
+            <textarea id="comentario" name="comentario" rows="3" placeholder="O que pode melhorar?"></textarea>
+
+            <button type="submit">Enviar Feedback</button>
+        </form>
+    </section>
+
+    <aside id="discussao">
+        <h2>Discussão</h2>
+        <p>Compartilhe suas dúvidas e ideias sobre a aula.</p>
+        <form onsubmit="publicarPergunta(event)">
+            <label for="pergunta">Faça uma pergunta ou comentário:</label>
+            <textarea id="pergunta" name="pergunta" rows="3"></textarea>
+            <button type="submit">Publicar</button>
+        </form>
+        <ul id="lista-perguntas">
+            <li><strong>João:</strong> Como o HTML5 melhora a acessibilidade?</li>
+        </ul>
+    </aside>
+
+    <footer>
+        <p>&copy; 2025 NoteEng - Um projeto para auxiliar no aprendizado.</p>
+    </footer>
+
+    <!-- Script JavaScript embutido -->
+    <script>
+        // Personalização do título
+        
+        document.getElementById("titulo-principal").textContent = "NoteEng - Plataforma Interativa";
+
+        // Estilização do campo de nota
+        const campoNota = document.getElementById("nota");
+        campoNota.style.border = "2px solid #4CAF50";
+        campoNota.style.backgroundColor = "#f9fff9";
+        campoNota.setAttribute("placeholder", "Anote tudo que achar importante!");
+
+        // Mensagem adicional em "Minhas Notas"
+        const mensagem = document.createElement("p");
+        mensagem.textContent = "Use esta seção para registrar suas anotações!";
+        document.getElementById("notas").appendChild(mensagem);
+
+        
+        // Função para salvar nota
+        function salvarNota(event) {
+            // disparado apenas se chamado explicitamente
+            event.preventDefault(); 
+            const nota = campoNota.value.trim();
+            if (nota) {
+                const data = new Date().toLocaleDateString();
+                const li = document.createElement("li");
+                li.innerHTML = `<strong>${data}:</strong> ${nota}`;
+                document.getElementById("lista-notas").appendChild(li);
+                campoNota.value = "";
+            }
+        }
+        
+
+        
+        // Função para alertar feedback
+        function enviarFeedback(event) {
+            event.preventDefault();
+
+            // conteúdo
+            const avaliacao = document.getElementById("avaliacao").value;
+
+            // referência
+            const feedback = document.getElementById("comentario");
+
+            if (feedback.value.length < 5){
+                alert(`O seu é muito curto.`);
+            } else {
+                alert(`Obrigado pelo feedback: ${avaliacao} => ${feedback.value}`);    
+            }
+            
+            feedback.value = "";
+        }
+        
+
+        
+        // Função para publicar pergunta
+        function publicarPergunta(event) {
+            event.preventDefault();
+            const pergunta = document.getElementById("pergunta").value.trim();
+            if (pergunta) {
+                const li = document.createElement("li");
+                li.innerHTML = `<strong>Você:</strong> ${pergunta}`;
+                document.getElementById("lista-perguntas").appendChild(li);
+                document.getElementById("pergunta").value = "";
+            }
+        }
+        
+    </script>
+</body>
+</html>
