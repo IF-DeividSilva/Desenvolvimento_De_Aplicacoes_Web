@@ -1,0 +1,79 @@
+/* Estilizando o corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Estilizando o cabeçalho */
+header {
+    background-color: #333;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 36px;
+    color: #1a36d6;
+}
+
+/* Estilizando imagens */
+img {
+    border-radius: 10px;
+    margin: 10px;
+}
+
+/* Estilizando vídeos */
+video {
+    border: 3px solid #1a46d6;
+    border-radius: 10px;
+}
+
+/* Estilizando a tabela */
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+    background-color: #222;
+}
+
+th, td {
+    padding: 15px;
+    border: 2px solid #d61a1a;
+    text-align: center;
+}
+
+/* Estilizando as seções */
+section {
+    padding: 20px;
+}
+
+/* Estilizando o formulário */
+form {
+    background-color: #444;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* Estilizando botões */
+button {
+    background-color: #d61a1a;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff3333;
+}
+
+/* Estilizando o rodapé */
+footer {
+    background-color: #333;
+    padding: 10px;
+    margin-top: 20px;
+}

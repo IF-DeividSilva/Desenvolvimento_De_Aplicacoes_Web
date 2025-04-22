@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- Declaração do tipo de documento HTML5, essencial para que os navegadores interpretem corretamente o código -->
+<html lang="pt-BR"> <!-- Define o idioma da página como português do Brasil, ajudando em acessibilidade e SEO -->
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Define a codificação de caracteres como UTF-8, garantindo suporte a acentos e caracteres especiais -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Configura a escala inicial para dispositivos móveis, garantindo um layout responsivo -->
+    <title>Portal institucional - UTFPR</title> <!-- Define o título que será exibido na aba do navegador -->
+    <link rel="stylesheet" href="styles.css"> <!-- Importa um arquivo CSS externo para estilização da página -->
+</head>
+
+
+<body>
+    <header> <!-- Cabeçalho da página, geralmente contém o título e navegação principal -->
+        <h1>Bem-vindo à BeachBoost</h1>
+        <p >Transforme sua carreira com nossos cursos de tecnologia inovadores e acessíveis. Aprenda as habilidades do futuro e
+        prepare-se para brilhar no mercado.</p> 
+        <h2>Portal institucional - UTFPR</h2> <!-- Título principal do site, geralmente com maior destaque -->
+        <nav> <!-- Seção de navegação, usada para organizar links importantes -->
+            <ul> <!-- Lista não ordenada que contém os links de navegação -->
+                <li><a href="H:\8 periodo\Web\Home.html">Home</a></li>
+                <!-- Link âncora que direciona para a seção de notas -->
+                <li><a href="H:\8 periodo\Web\Sobre.html">Sobre</a></li>
+                <!-- Link âncora que leva para a seção de feedback -->
+                <li><a href="H:\8 periodo\Web\Cursos.html">Cursos</a></li>
+                <!-- Link âncora que permite acesso à seção de discussão -->
+                <li><a href="H:\8 periodo\Web\Contato.html">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="destaques">
+            <h2> Destaques</h2>
+            <p>🎯 Missão: Conectar pessoas ao universo da tecnologia. </p>
+            <p>🌟 Resultados: Mais de [número] alunos formados e prontos para o mercado</p>
+            <p>🤝 Conexões: Parceiros de renome no setor tecnológico.</p>
+    </section>
+
+    <section id="feedback"> <!-- Seção onde os alunos podem avaliar a aula -->
+        <h2>Feedback do Site</h2> <!-- Título secundário para indicar a função da seção -->
+        <form> <!-- Formulário para envio de avaliações e comentários -->
+            <label for="avaliacao">Como você avaliaria o site?</label>
+            <!-- Rótulo explicativo vinculado ao menu suspenso -->
+            <select id="avaliacao" name="avaliacao"> <!-- Menu suspenso com opções de avaliação -->
+                <option value="excelente">Excelente</option> <!-- Opção de avaliação positiva -->
+                <option value="bom">Mais que Bom</option>
+                <option value="regular">Bom</option>
+                <option value="ruim">Menos Bom</option> <!-- Opção de avaliação negativa -->
+            </select>
+
+            <label for="comentario">Comentários adicionais:</label> <!-- Rótulo que orienta a escrita de comentários -->
+            <textarea id="comentario" name="comentario" rows="3" placeholder="O que pode melhorar?"></textarea>
+            <!-- Campo de texto multilinha para sugestões -->
+
+            <button type="submit">Enviar Feedback</button> <!-- Botão para submeter a avaliação -->
+        </form>
+    </section>
+
+    <section id="depoimentos"> 
+        <h2> Depoimentos</h2> 
+        <p>💬 “O curso mudou minha vida! Hoje trabalho na área de TI e nunca me senti tão realizado.” – Agostinho </p>
+        <p>💬 “Uma experiência única de aprendizado com suporte constante.” – Maumas</p>   
+    </section>
+
+    <footer> <!-- Rodapé da página, geralmente contém informações adicionais -->
+        <p>&copy; 2025 Rodapé - Um projeto para auxiliar no aprendizado.</p>
+        <!-- Texto de direitos autorais e propósito do site -->
+    </footer>
+</body>
+
+</html>
