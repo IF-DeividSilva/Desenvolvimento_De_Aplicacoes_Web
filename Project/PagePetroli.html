@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Aprenda com Imagens - IA Educativa</title>
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+
+  <!-- CSS -->
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f8fa;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(to right, #0077b6, #00b4d8);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.2em;
+    }
+
+    header p {
+      font-size: 1.1em;
+      margin-top: 10px;
+    }
+
+    .card {
+      background: white;
+      margin: 30px auto;
+      padding: 25px;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      color: #0077b6;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+
+    button {
+      background: #0077b6;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #023e8a;
+    }
+
+    .image-preview {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    img {
+      max-width: 90%;
+      max-height: 400px;
+      border: 5px solid #00b4d8;
+      border-radius: 10px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .result {
+      margin-top: 20px;
+      background-color: #e6f7ff;
+      padding: 18px;
+      border-left: 6px solid #00b4d8;
+      border-radius: 8px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    a {
+      color: #0077b6;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #777;
+    }
+
+    @media (max-width: 700px) {
+      .card {
+        margin: 20px;
+      }
+
+      img {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Aprenda com a Inteligência Artificial</h1>
+    <p>Envie uma imagem e descubra o que há nela com a ajuda de uma IA treinada!</p>
+  </header>
+
+  <section class="card">
+    <h2>Como Funciona?</h2>
+    <p>
+      Este site utiliza o modelo <strong>MobileNet</strong>, treinado com milhares de imagens do mundo real. 
+      Quando você envia uma foto, a IA analisa a imagem e compara com seu banco de dados para sugerir o que provavelmente está presente nela.
+    </p>
+    <p>É uma forma divertida e educativa de aprender sobre visão computacional e reconhecimento de padrões!</p>
+  </section>
+
+  <section class="card">
+    <h2>Teste Agora!</h2>
+    <p>1. Selecione uma imagem<br>2. Clique em "Descobrir"<br>3. Veja o que a IA reconhece!</p>
+    <input type="file" id="image-upload" accept="image/*" />
+    <br>
+    <button onclick="handleUpload()">🔍 Descobrir</button>
+    <div class="image-preview">
+      <img id="img" src=""/>
+    </div>
+    <div id="image-results" class="result"></div>
+  </section>
+
+  <section class="card">
+    <h2>Por Que Usar IA na Educação?</h2>
+    <p>
+      Ao explorar os resultados, os alunos aprendem conceitos como:
+      <ul>
+        <li>Classificação de imagens</li>
+        <li>Redes neurais treinadas</li>
+        <li>Probabilidades e incerteza</li>
+        <li>Curiosidade visual e análise de padrões</li>
+      </ul>
+      Você pode usar este recurso em sala de aula ou como ferramenta pessoal para descobrir mais sobre o mundo ao seu redor.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Saiba Mais</h2>
+    <ul>
+      <li><a href="https://www.tensorflow.org/js">TensorFlow.js - Documentação oficial</a></li>
+      <li><a href="https://github.com/tensorflow/tfjs-models/tree/master/mobilenet">MobileNet no GitHub</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    Desenvolvido como ferramenta educativa com ❤️ e IA.
+  </footer>
+
+  <script>
+    let mobilenetModel;
+
+    window.addEventListener('load', async () => {
+      const button = document.querySelector('button');
+      button.disabled = true;
+      button.innerText = 'Carregando IA...';
+      mobilenetModel = await mobilenet.load();
+      button.disabled = false;
+      button.innerText = '🔍 Descobrir';
+    });
+
+    function handleUpload() {
+      const fileInput = document.getElementById('image-upload');
+      const file = fileInput.files[0];
+      const imgElement = document.getElementById('img');
+      const resultDiv = document.getElementById('image-results');
+
+      if (!file) {
+        alert('Por favor, selecione uma imagem.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        imgElement.onload = () => {
+          imgElement.style.display = 'block';
+          if (!mobilenetModel) {
+            resultDiv.innerHTML = 'Aguarde, o modelo ainda está carregando...';
+            return;
+          }
+
+          mobilenetModel.classify(imgElement).then(predictions => {
+            resultDiv.innerHTML = '<h3>Resultado da Análise:</h3><ul>' + 
+              predictions.map(p => `<li><strong>${p.className}</strong>: ${(p.probability * 100).toFixed(2)}%</li>`).join('') + 
+              '</ul>';
+          });
+        };
+        imgElement.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>
