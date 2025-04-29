@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tensorflow JS Demo</title>
+    <link rel="stylesheet" href="styles.css">
+<!-- TensorFlow.js for both models -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://kaggle.com/models/google/mobilenet-v2/frameworks/TensorFlow1/variations/openimages-v4-ssd-mobilenet-v2/versions/1"></script>
+</head>
+
+<body>
+    <h1>Image Object Detection</h1>
+
+    <section class="card">
+        <h2>Image Object Detection</h2>
+        <input type="file" id="image-upload" accept="image/*" />
+        <button onclick="handleUpload()">Detect Objects</button>
+        <div class="image-preview">
+            <img id="img" src="" />
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="image-results" class="result"></div>
+    </section>
+
+    <script>
+        
+    </script>
+</body>
