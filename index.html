@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tensorflow JS Demo</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- TensorFlow.js for both models -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+</head>
+<body>
+  <h1>Toxicity & Object Detection Demo</h1>
+
+  <section class="card">
+    <p>Useful Links:</p>
+    <ul>
+      <li><a href="https://www.tensorflow.org/js">Library Overview</a></li>
+      <li><a href="https://github.com/tensorflow/tfjs-models/tree/master/toxicity">Toxicity Model</a></li>
+      <li><a href="https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd">Object Detection Model</a></li>
+      <li><a href="https://www.tensorflow.org/js/models">Models Available <strong>for direct reuse!</strong> </a></li>
+    </ul>
+  </section>
+
+  <!-- Text Analysis Section -->
+  <section class="card">
+    <h2>Text Toxicity Prediction</h2>
+    <textarea id="text-input" placeholder="Enter your sentence here...">you suck</textarea>
+    <button onclick="analyzeText()">Analyze Text</button>
+    <div id="results" class="result"></div>
+  </section>
+
+  <!-- Image Object Detection Section -->
+  <section class="card">
+    <h2>Image Object Detection</h2>
+    <input type="file" id="image-upload" accept="image/*" />
+    <button onclick="handleUpload()">Detect Objects</button>
+    <div class="image-preview">
+      <img id="img" src=""/>
+      <canvas id="canvas"></canvas>
+    </div>
+    <div id="image-results" class="result"></div>
+  </section>
+
+  <script>
+    // ---------- TEXT TOXICITY ANALYSIS ----------
+    const threshold = 0.9;
+    let toxicityModel;
+
+    toxicity.load(threshold).then(m => {
+      toxicityModel = m;
+      console.log('Toxicity model loaded.');
+    });
+
+    function analyzeText() {
+      const input = document.getElementById('text-input').value;
+      const sentences = [input];
+      const resultDiv = document.getElementById('results');
+      resultDiv.innerHTML = 'Analyzing...';
+
+      if (!toxicityModel) {
+        resultDiv.innerHTML = 'Model is still loading. Please wait...';
+        return;
+      }
+
+      toxicityModel.classify(sentences).then(predictions => {
+        let output = `<h3>Results for: "${input}"</h3><ul>`;
+        predictions.forEach(prediction => {
+          const result = prediction.results[0];
+          output += `<li><strong>${prediction.label}:</strong> 
+            <span class="${result.match ? 'match-true' : 'match-false'}">
+              ${result.match === null ? 'Neutral' : result.match}
+            </span> 
+            (confidence: ${Math.max(...result.probabilities).toFixed(2)})
+          </li>`;
+        });
+        output += '</ul>';
+        resultDiv.innerHTML = output;
+        console.log(predictions);
+      });
+    }
+
+    // ---------- OBJECT DETECTION ----------
+    let cocoModel;
+
+    cocoSsd.load().then(m => {
+      cocoModel = m;
+      console.log('Object detection model loaded.');
+    });
+
+    function handleUpload() {
+      const fileInput = document.getElementById('image-upload');
+      const file = fileInput.files[0];
+      const imgElement = document.getElementById('img');
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      if (!file) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        imgElement.onload = () => {
+          canvas.width = imgElement.width;
+          canvas.height = imgElement.height;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(imgElement, 0, 0);
+
+          if (!cocoModel) {
+            document.getElementById('image-results').innerText = 'Model still loading...';
+            return;
+          }
+
+          cocoModel.detect(imgElement).then(predictions => {
+            console.log('Predictions:', predictions);
+            drawBoxes(predictions, ctx);
+            displayResults(predictions);
+          });
+        };
+        imgElement.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function drawBoxes(predictions, ctx) {
+      ctx.lineWidth = 2;
+      ctx.font = '16px Arial';
+      predictions.forEach(p => {
+        ctx.strokeStyle = '#00FF00';
+        ctx.fillStyle = '#00FF00';
+        const [x, y, width, height] = p.bbox;
+        ctx.strokeRect(x, y, width, height);
+        ctx.fillText(`${p.class} (${(p.score * 100).toFixed(1)}%)`, x, y > 10 ? y - 5 : y + 15);
+      });
+    }
+
+    function displayResults(predictions) {
+      const resultDiv = document.getElementById('image-results');
+      if (predictions.length === 0) {
+        resultDiv.innerHTML = '<p>No objects detected.</p>';
+        return;
+      }
+
+      resultDiv.innerHTML = '<ul>' + predictions.map(p =>
+        `<li>${p.class}: ${(p.score * 100).toFixed(1)}%</li>`
+      ).join('') + '</ul>';
+    }
+  </script>
+</body>
+</html>

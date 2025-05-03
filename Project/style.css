@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e2f; /* fundo escuro elegante */
+}
+
+h1 {
+    color: #ffffff;
+}
+
+h2 {
+    color: #00bcd4;
+}
+
+button {
+    /* Centraliza o texto */
+    text-align: center;
+    width: 25%; /* mesma largura do textarea */
+    background-color: #00bcd4;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #0097a7;
+    transform: scale(1.05);
+}
+
+section {
+    /* Centraliza o texto */
+    text-align: center;
+    margin: 20px;
+    padding: 15px;
+    background: #2c2c3e;
+    border-radius: 8px;
+    align-items: center; /* centraliza os elementos horizontalmente */
+}
+
+textarea {
+    width: 75%;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    resize: vertical;
+    background-color: #f8f8f8;
+    color: #000;
+    margin-bottom: 10px; /* espaço entre textarea e botão */
+}
+
+.result{
+    color: #00bcd4;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 30px;
+}

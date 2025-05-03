@@ -1,31 +1,87 @@
 <!DOCTYPE html>
 <!-- Declaração do tipo de documento HTML5, essencial para que os navegadores interpretem corretamente o código -->
-<html lang="pt-BR"> <!-- Define o idioma da página como português do Brasil, ajudando em acessibilidade e SEO -->
+<html lang="pt-BR">
+  <!-- Define o idioma da página como português do Brasil, ajudando em acessibilidade e SEO -->
 
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <!-- Define a codificação de caracteres como UTF-8, garantindo suporte a acentos e caracteres especiais -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Configura a escala inicial para dispositivos móveis, garantindo um layout responsivo -->
-    <title>Trabalho 1 </title> <!-- Define o título que será exibido na aba do navegador -->
-    <link rel="stylesheet" href="style.css"> <!-- Importa um arquivo CSS externo para estilização da página -->
-</head>
+    <title>Trabalho 1</title>
+    <!-- Define o título que será exibido na aba do navegador -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- Importa um arquivo CSS externo para estilização da página -->
+  </head>
 
+  <!--https://github.com/tensorflow/tfjs-models/tree/master/qna-->
 
-<!--https://github.com/tensorflow/tfjs-models/tree/master/qna-->
+  <body>
+    <header>
+      <!--Cabeçalho-->
+      <h1>IA para Resposta a perguntas em linguagem natural</h1>
+    </header>
 
-<body>
-    <header> <!--Cabeçalho-->
-        <h1>IA para Resposta a perguntas em linguagem natural</h1>
-        </header>
+    <section class="text">
+      <h2>Write your text:</h2>
+      <textarea
+        id="text-input"
+        placeholder="Enter your text here..."
+      ></textarea>
+      <button onclick="saveText()">Save Text</button>
+    </section>
 
-    <section class= "question">
-        <h2> Faça sua pegunta: </h2>
-        <textarea id= "text-input" placeholder="Enter your question here..."></textarea> </textarea>
-        <button onclick="answering()"> ask </button>
-        <div id="result" class="result"> </div>
-    </section> 
-    
+    <section class="question">
+      <h2>Write your ask:</h2>
+      <textarea
+        id="ask-input"
+        placeholder="Enter your question here..."
+      ></textarea>
+      <button onclick="answering()">Ask</button>
+    </section>
 
-</body>
+    <section class="answer">
+      <h2>Your Answer:</h2>
+      <div id="results" class="result"></div>
+    </section>
+
+    <!--Carregar a IA de texto-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/qna"></script>
+
+    <script>
+      // Notice there is no 'import' statement. 'qna' and 'tf' is
+      // available on the index-page because of the script tag above.
+      // Load the model.
+      var passage = "";
+      var resultDiv = document.getElementById("results");
+      function saveText() {
+        // verification ??
+        passage = document.getElementById("text-input").value;
+      }
+      //question = "What are eukaryotic cells?";
+      //passage = "Eukaryotic cells have a nucleus and membrane-bound organelles.";
+
+      function answering() {
+        var question = document.getElementById("ask-input").value;
+        resultDiv.innerHTML = "Analyzing your question...";
+        qna.load().then((model) => {
+          // Find the answers
+          model.findAnswers(question, passage).then((answers) => {
+            if (answers.length > 0) {
+              resultDiv.innerHTML =
+                "Answer 1: " +
+                answers[0].text +
+                "<br>" +
+                "Answer 2: " +
+                answers[1].text;
+            } else {
+              resultDiv.innerHTML = "No answer found.";
+            }
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
