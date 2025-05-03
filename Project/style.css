@@ -3,7 +3,14 @@ body {
     color: #f0f0f0;
     margin: 0;
     padding: 0;
-    background-color: #1e1e2f; /* fundo escuro elegante */
+    background-color: #1e1e2f;
+}
+header{
+    background: linear-gradient(to right, #0077b6, #00b4d8);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -11,6 +18,11 @@ h1 {
 }
 
 h2 {
+    color: #00bcd4;
+}
+
+
+h3 {
     color: #00bcd4;
 }
 
@@ -32,7 +44,7 @@ button:hover {
     transform: scale(1.05);
 }
 
-section {
+section{
     /* Centraliza o texto */
     text-align: center;
     margin: 20px;
@@ -40,6 +52,7 @@ section {
     background: #2c2c3e;
     border-radius: 8px;
     align-items: center; /* centraliza os elementos horizontalmente */
+    width: 46%;
 }
 
 textarea {
@@ -54,9 +67,42 @@ textarea {
 }
 
 .result{
-    color: #00bcd4;
+    min-height: 83px; /* Define uma altura mínima para expandir */
+    color: #ffffff;
     font-style: italic;
     font-weight: bold;
     font-size: 1.1em;
     margin: 30px;
+}
+
+.about {
+    position: absolute;
+    top: 140px;  /* Distância do topo */
+    right: 10px; /* Distância da direita */
+}
+.example {
+    position: absolute;
+    top: 330px;  /* Distância do topo */
+    right: 10px; /* Distância da direita */
+}
+
+
+footer {
+    /* Centraliza o texto */
+    text-align: center;
+    
+    /* Adiciona espaçamento interno */
+    padding: 10px;
+    
+    /* Define um fundo escuro */
+    background-color: #2c3e50;
+    
+    /* Define a cor do texto como branco */
+    color: white;
+    
+    /* Mantém o rodapé posicionado na parte inferior */
+    position: relative;
+    
+    /* Garante que o rodapé ocupe toda a largura */
+    width: 100%;
 }
