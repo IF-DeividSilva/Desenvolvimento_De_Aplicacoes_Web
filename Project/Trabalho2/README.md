@@ -62,13 +62,13 @@ Esta aplicação web tem como objetivo oferecer uma experiência de aprendizado 
 ![img](./img/p4.png)
 
 ### Link para Vídeo Explicativo
-- [VideoLixo.mp4](https://youtu.be/6Ux5-oC99Cw)
+- [VideoLixo2.mp4](https://youtu.be/6Ux5-oC99Cw)
 ---
 ## Referências e Links de Apoio
 
-- [TensorFlow.js - speech-commands](https://github.com/tensorflow/tfjs-models/tree/master/speech-commands)
+- [TensorFlow.js - speech-commands](https://github.com/tensorflow/tfjs-models/tree/master/qna)
 - [Documentação oficial do TensorFlow.js](https://www.tensorflow.org/js)
-- [MDN Web Docs - HTML, CSS, JavaScript](https://developer.mozilla.org/) "nada como aprender do cliente (heheh)"
+- [W3Schools - HTML, CSS, JavaScript](https://www.w3schools.com/)
 
 
 ---
