@@ -95,7 +95,7 @@ Esta ferramenta pode ser usada em:
 
 ## 🎞️ Vídeo
 
-Vídeo: 
+Vídeo: [Vídeo Explicativo](https://youtu.be/T6Q3TJRtWpc)
 
 ---
 
