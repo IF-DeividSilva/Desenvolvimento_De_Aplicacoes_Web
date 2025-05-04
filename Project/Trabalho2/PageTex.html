@@ -97,14 +97,25 @@ What is Newton's first law of motion?</textarea
       var passage = "";
       var resultDiv = document.getElementById("results");
       function saveText() {
-        // verification ??
         passage = document.getElementById("text-input").value;
+        // Exibe um pop-up de confirmação informando que o texto foi salvo
+        alert("Texto salvo com sucesso!");
       }
       //question = "What are eukaryotic cells?";
       //passage = "Eukaryotic cells have a nucleus and membrane-bound organelles.";
 
       function answering() {
         var question = document.getElementById("ask-input").value;
+        // verifica se o texto está vazio...
+        if (passage.trim() === ""){
+          alert("Por favor, escreva um texto para processeguir...")
+          return;
+        }
+        // verifica se a pergunta está vazia...
+        if (question.trim() === "") {
+          alert("Por favor, escreva a sua pergunta.");
+          return;
+        }
         resultDiv.innerHTML = "Analyzing your question...";
         qna.load().then((model) => {
           // Find the answers
