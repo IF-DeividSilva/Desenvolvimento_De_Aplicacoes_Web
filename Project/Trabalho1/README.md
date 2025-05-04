@@ -45,8 +45,6 @@ Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de
 4. Espere a mensagem **"🔍 Descobrir"** aparecer (a IA está carregando).
 5. Envie uma imagem e veja os resultados!
 
-> 💡 Caso a imagem não carregue corretamente, use a aplicação com um servidor local (por exemplo: Live Server ou `python -m http.server`).
-
 ---
 
 ## 📸 Print Screens da Aplicação
@@ -61,23 +59,24 @@ Explica ao usuário, de forma simples, como usar a ferramenta: enviar uma imagem
 
 ---
 
-### 🟧 3. Upload e Botão de Análise
+### 🟧 2. Upload e Botão de Análise
 Interface com o botão de upload e o botão de análise ("🔍 Descobrir"). O modelo MobileNet é carregado em segundo plano.
 ![Botao Image](markdownImage/botao.png)
 
 Exemplo de resultados juntamente com as análises.
-Carro:
+
+🚗 Carro:
 ![Carro Image](markdownImage/carroAnalise.png)
 
-Planta:
+🌱 Planta:
 ![Planta Image](markdownImage/plantaAnalise.png)
 
-Cidade:
+🏙️ Cidade:
 ![Cidade Image](markdownImage/cidade.png)
 
 ---
 
-### 🟪 5. Aplicação no Contexto Educacional
+### 🟪 3. Aplicação no Contexto Educacional
 Demonstra como a ferramenta pode ser aplicada em sala de aula, reforçando a atenção, observação e raciocínio lógico dos estudantes.
 
 ![Explicação Educacional](markdownImage/explicAula.png)
@@ -96,11 +95,7 @@ Esta ferramenta pode ser usada em:
 
 ## 🎞️ Vídeo
 
-Esta ferramenta pode ser usada em:
-
-- **Aulas de ciências e biologia**: identificação de animais, plantas, objetos.
-- **Educação infantil e fundamental**: incentivo à curiosidade e observação.
-- **Introdução à inteligência artificial**: mostrar de forma prática como um modelo pré-treinado pode ser usado.
+Vídeo: 
 
 ---
 
@@ -123,4 +118,4 @@ Esta ferramenta pode ser usada em:
 
 ## 🧠 Licença
 
-Este projeto é de uso livre para fins educacionais e acadêmicos. Compartilhe conhecimento! 🚀
+Este projeto é de uso livre para fins educacionais e acadêmicos.
