@@ -43,7 +43,7 @@ Esta aplicação web tem como objetivo oferecer uma experiência de aprendizado 
 
 2. Coloque todos os arquivos na mesma pasta.
 
-3. Para executar corretamente, é necessário rodar o projeto em um servidor local (localhost).(Necessário devido as imagens que estão no JS).
+3. Para executar corretamente, é necessário rodar o projeto em um servidor local (localhost).
 
 4. Após iniciar o servidor local, abra o navegador e acesse o endereço fornecido (exemplo: http://localhost:5500/PageTex.html).
 
