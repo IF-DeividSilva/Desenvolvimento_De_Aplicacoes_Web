@@ -16,11 +16,12 @@ Esta aplicação web tem como objetivo oferecer uma experiência de aprendizado 
 
 ### Funcionalidades
 
-- Interface de quiz com perguntas de múltipla escolha.
-- Detecção de palavras por voz utilizando modelo `speech-commands` do TensorFlow.js.
-- Feedback automático com base nas respostas.
-- Sistema de pontuação.
-- Interface interativa com botões e emojis para atrair o usuario final(crianças do fundamental).
+- Interface simples e intuitiva para digitar textos e perguntas.
+- Utilização do modelo qna da biblioteca TensorFlow.js para compreensão de linguagem natural.
+- Extração automática de respostas diretamente do conteúdo inserido pelo usuário.
+- Área de demonstração com exemplo prático para facilitar o uso.
+- Interface responsiva com layout dividido em seções claras (texto, pergunta, resposta).
+- Estilo visual adaptado para facilitar a leitura e navegação por usuários de diferentes níveis.
 
 ---
 
