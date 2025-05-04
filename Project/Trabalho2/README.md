@@ -31,7 +31,7 @@ Esta aplicação web tem como objetivo oferecer uma experiência de aprendizado 
 - **CSS3**: Design visual, responsividade e UX.
 - **JavaScript**: Lógica da aplicação.
 - **[TensorFlow.js](https://www.tensorflow.org/js)**: biblioteca para execução de modelos IA no navegador.
-- **Modelo Utilizado:** [`speech-commands`](https://github.com/tensorflow/tfjs-models/tree/master/speech-commands)
+- **Modelo Utilizado:** [`qna`](https://github.com/tensorflow/tfjs-models/tree/master/qna)
 
 ---
 
