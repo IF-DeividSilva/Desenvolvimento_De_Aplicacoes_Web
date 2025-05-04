@@ -1,0 +1,194 @@
+/* Fonte geral da página */
+body {
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(to right, #d0f0fd, #fffde1); /* azul bebê com amarelo claro */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Bloco do cabeçalho */
+header {
+    background: linear-gradient(to right, #dbeafe, #fef9c3); /* azul claro com amarelo */
+    padding: 30px 20px; /* espaçamento interno */
+    text-align: center;
+    border-bottom: 4px solid #93c5fd; /* borda azul clara em linha */
+    border-radius: 0 0 25px 25px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1); /* sombra suave */
+} 
+
+/* Título principal */
+h1 {
+    text-align: center;
+    font-size: 3em;
+    margin-top: 20px;
+    color: #3b82f6; 
+    text-shadow: 2px 2px #e0f2ff; /* sombra azul clara no texto */
+}
+
+/* Subtítulo */
+h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #f59e0b; 
+    margin-top: 20px;
+    text-shadow: 1px 1px #fff; 
+}
+
+/* Navbar */
+nav ul {
+    list-style-type: none; /* remove os marcadores da lista */
+    padding: 0;
+    text-align: center;
+    margin: 20px 0;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav a {
+    text-decoration: none; /* remove o sublinhado */
+    color: #2563eb;
+    padding: 12px 20px;
+    margin: 6px;
+    display: inline-block; /* exibe como bloco em linha */
+    background-color: #f0f9ff;
+    border-radius: 32px; /* bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* sombra suave */
+    transition: all 0.3s ease;
+    font-weight: bold; /* negrito */  
+}
+
+nav a:hover { /* efeito de hover */
+    background-color: #2563eb; 
+    color: #fff;
+}
+
+nav a::before { /* ícone antes do texto */
+    content: '🎲 ';
+    font-size: 1.2em;
+}
+
+/* Seções */
+section {
+    max-width: 850px;
+    margin: 20px auto;
+    padding: 30px; /* espaçamento interno */  
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* sombra suave */
+    border: 2px dashed #93c5fd;
+}
+
+/* Container do quiz */
+#quiz {
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #f0fdf4;
+    border-radius: 20px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* Área da pergunta */
+#quiz-container {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #d1fae5;
+    padding-bottom: 20px;
+}
+
+#question-text { 
+    font-size: 1.6em;
+    margin: 20px 0;
+    color: #059669;
+}
+/* emoji atras dos botao pra jovens se interessarem */
+#iniciar::before {
+    content: '🧩 ';
+    font-size: 1.2em;
+}
+
+#responder::before {
+    content: '🎯 ';
+    font-size: 1.2em;
+}
+
+#finalizar::before {
+    content: '🏁 ';
+    font-size: 1.2em;
+}
+
+#reiniciar::before {
+    content: '🔄 ';
+    font-size: 1.2em;
+}
+
+/* Feedback */
+#feedback {
+    font-size: 1.3em;
+    color: #10b981;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* Botões */
+button {
+    font-family: inherit;
+    background-color: #fef9c3;
+    color: #374151;
+    padding: 12px 22px;
+    margin: 10px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* transição suave */
+}
+
+button:hover {
+    background-color: #3b82f6;
+    color: #fff;
+}
+
+
+
+/* Área de log */
+#log {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #e0f2fe;
+    border-radius: 12px;
+    font-style: italic;
+}
+
+/* Resultados */
+aside#resultados {
+    background-color: #fef3c7;
+    padding: 25px;
+    margin: 30px auto;
+    max-width: 850px;
+    border-radius: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-left: 6px solid #f59e0b;
+}
+
+/* Rodapé */
+footer { 
+    text-align: center;
+    padding: 25px;
+    background-color: #2563eb;
+    color: #fff;
+    margin-top: 50px;  
+    font-size: 1em; 
+    border-top: 5px dashed #fde68a; /* borda amarela com o traço*/
+}
+
+footer::before { /* emoji no rodape */
+    content: '👨‍🎓';
+    font-size: 2em;
+    display: block;
+    margin-bottom: 8px;
+}

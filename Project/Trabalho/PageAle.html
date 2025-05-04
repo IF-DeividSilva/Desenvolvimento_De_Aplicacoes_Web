@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+    <script src="app.js"></script>
+    <title>Quiz Educacional - Reconhecimento de Voz</title>
+</head>
+
+<body>
+    <header>
+        <h1>Quiz Educacional de Inglês com reconhecimento de voz</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Página Inicial</a></li>
+                <li><a href="#instrucoes">Instruções</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+                <li><a href="#resultados">Resultados</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="instrucoes">
+        <h2>Instruções</h2>
+        <p>Bem-vindo ao Quiz Educacional de Inglês! Este quiz foi desenvolvido para ajudar você a praticar e melhorar suas habilidades em inglês.</p>
+        <p>Você pode responder às perguntas usando sua voz. O sistema reconhecerá suas respostas e fornecerá feedback imediato.</p>
+        <p>Para começar, clique no botão "Iniciar Quiz". Você verá uma pergunta e poderá responder usando os comandos de voz disponíveis.</p>
+        <p>Após responder todas as perguntas, você verá seus resultados e feedback.</p>
+        <p>Comandos de voz disponíveis:</p>
+        <p><strong>"yes", "no", "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"</strong></p>
+        <p>Comandos de voz para avançar e voltar questões: <strong>"right" (para avançar), "left" (para voltar)</strong></p>
+        <p>Você pode usar os botões abaixo para iniciar o quiz, responder perguntas ou encerrar o quiz.</p>
+        <p>Use o botão "Reiniciar Quiz" para começar novamente.</p>
+        <p>Boa sorte!</p>
+    </section>
+
+
+    <main id="quiz">
+        <div id="quiz-container">
+            <img id="quiz-image" src="img/carregando.gif" alt="Carregando..." width="300" style="margin-bottom: 10px;" />
+            <p id="question-text">Carregando questão...</p>
+            <p id="feedback"></p>
+        </div>
+
+        <button id="iniciar" onclick="start()">Iniciar Quiz</button>
+        <button id ="responder" onclick="listenForAnswer()">Responder Questão</button>
+        <button id ="finalizar" onclick="endQuiz()">Finalizar Quiz</button>
+        <button id ="reiniciar" onclick="start()">Reiniciar Quiz</button>
+        <div id="log">Resposta detectada: <strong>------</strong></div>
+    </main>
+    </div>
+
+    <aside id="resultados">
+        <h2>Resultados</h2>
+        <p id="results" style="margin-top: 20px; font-weight: bold;"></p>
+        <p id="feedback-text"></p>
+    </aside>
+
+    <footer>
+        <p>Desenvolvido por Alexandre Aparecido da Silva</p>
+        <p>Data: 05/03/2025</p>
+        <p>Email: alexandreaparecido@alunos.utfpr.edu.br</p>
+        <p>&copy; 2025 Quiz Educacional - Um projeto para auxiliar no aprendizado.</p> 
+    </footer>
+
+</body>
+
+</html>
