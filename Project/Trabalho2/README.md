@@ -62,7 +62,7 @@ Esta aplicação web tem como objetivo oferecer uma experiência de aprendizado 
 ![img](./img/p4.png)
 
 ### Link para Vídeo Explicativo
-- [VideoLixo2.mp4](https://youtu.be/6Ux5-oC99Cw)
+- [VideoLixo2.mp4](https://youtu.be/1vzVwyQHIQ4)
 ---
 ## Referências e Links de Apoio
 
