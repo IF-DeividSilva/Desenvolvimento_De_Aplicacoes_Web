@@ -1,16 +1,16 @@
-# 🌐 Portal Educativo com IA
+# Portal Educativo com IA
 
 Este projeto é uma **homepage interativa** desenvolvida com HTML e CSS, que serve como ponto de entrada para diferentes aplicações educacionais baseadas em inteligência artificial. A proposta é proporcionar uma experiência de aprendizado dinâmica, divertida e acessível para todos os usuários.
 
 ---
 
-## 🎯 Objetivo
+## Objetivo
 
 Criar um portal bonito, intuitivo e responsivo que direcione o usuário para diferentes ferramentas educativas com IA, promovendo o aprendizado de forma moderna e interativa.
 
 ---
 
-## 🔗 Funcionalidades da Página Inicial
+## Funcionalidades da Página Inicial
 
 A homepage conta com três seções principais, apresentadas como **cards interativos**:
 
@@ -22,7 +22,7 @@ A homepage conta com três seções principais, apresentadas como **cards intera
 
 ---
 
-## 🖌️ Estilo e Design
+## Estilo e Design
 
 - Design moderno com gradientes suaves e fontes arredondadas (Fredoka e Inter).
 - Layout responsivo com grid adaptável.
@@ -31,7 +31,7 @@ A homepage conta com três seções principais, apresentadas como **cards intera
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - HTML5
 - CSS3 (Grid Layout, Media Queries)
@@ -39,5 +39,15 @@ A homepage conta com três seções principais, apresentadas como **cards intera
 
 ---
 
-## 📁 Estrutura de Arquivos (parcial)
+## Estrutura de Arquivos (parcial)
 
+
+- Project/
+  - Trabalho/
+    - PageAle.html
+  - Trabalho1/
+    - PagePetroli.html
+  - Trabalho2/
+    - PageTex.html
+  - Homepage.html
+---

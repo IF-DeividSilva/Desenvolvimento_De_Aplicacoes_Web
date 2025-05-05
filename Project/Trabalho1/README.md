@@ -1,16 +1,16 @@
-# 🔍 Descubra o que há em sua imagem
+# Descubra o que há em sua imagem
 
 Esta aplicação web permite que o usuário **envie uma imagem** e receba uma **análise visual feita por Inteligência Artificial**, utilizando o modelo pré-treinado **MobileNet** com **TensorFlow.js**. É uma ferramenta educacional interativa e acessível que incentiva o aprendizado por meio da curiosidade visual.
 
 ---
 
-## 🎯 Objetivo
+## Objetivo
 
 Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de uma experiência prática com visão computacional. A aplicação foi desenvolvida para ser usada tanto em ambientes escolares quanto em casa.
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 - Upload de imagens diretamente do dispositivo (computador ou celular).
 - Classificação automática do conteúdo da imagem.
@@ -20,7 +20,7 @@ Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **HTML5 & CSS3** — estrutura e estilo da aplicação.
 - **JavaScript** — lógica e integração com o modelo de IA.
@@ -29,7 +29,7 @@ Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de
 
 ---
 
-## 🖼️ Como Funciona
+## Como Funciona
 
 1. O usuário **escolhe uma imagem** do dispositivo.
 2. A IA **processa e classifica** a imagem com base em sua base de dados de reconhecimento.
@@ -37,7 +37,7 @@ Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de
 
 ---
 
-## ▶️ Como Usar Localmente
+## Como Usar Localmente
 
 1. Baixe ou clone os arquivos do projeto.
 2. Certifique-se de manter todos os arquivos em uma mesma pasta.
@@ -47,11 +47,11 @@ Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de
 
 ---
 
-## 📸 Print Screens da Aplicação
+## Print Screens da Aplicação
 
 A seguir estão algumas telas da aplicação "Descubra o que há em sua imagem", com breves descrições sobre sua funcionalidade:
 
-### 🟦 1. Tela Inicial
+### 1. Tela Inicial
 Exibe o título da aplicação e a descrição principal com cores chamativas e layout amigável para crianças e professores.
 Explica ao usuário, de forma simples, como usar a ferramenta: enviar uma imagem e visualizar os resultados com IA.
 
@@ -59,31 +59,31 @@ Explica ao usuário, de forma simples, como usar a ferramenta: enviar uma imagem
 
 ---
 
-### 🟧 2. Upload e Botão de Análise
+### 2. Upload e Botão de Análise
 Interface com o botão de upload e o botão de análise ("🔍 Descobrir"). O modelo MobileNet é carregado em segundo plano.
 ![Botao Image](markdownImage/botao.png)
 
 Exemplo de resultados juntamente com as análises.
 
-🚗 Carro:
+🚗 **Carro**:
 ![Carro Image](markdownImage/carroAnalise.png)
 
-🌱 Planta:
+🌱 **Planta**:
 ![Planta Image](markdownImage/plantaAnalise.png)
 
-🏙️ Cidade:
+🏙️ **Cidade**:
 ![Cidade Image](markdownImage/cidade.png)
 
 ---
 
-### 🟪 3. Aplicação no Contexto Educacional
+### 3. Aplicação no Contexto Educacional
 Demonstra como a ferramenta pode ser aplicada em sala de aula, reforçando a atenção, observação e raciocínio lógico dos estudantes.
 
 ![Explicação Educacional](markdownImage/explicAula.png)
 
 ---
 
-## 💡 Aplicações Educacionais
+## Aplicações Educacionais
 
 Esta ferramenta pode ser usada em:
 
@@ -93,13 +93,13 @@ Esta ferramenta pode ser usada em:
 
 ---
 
-## 🎞️ Vídeo
+## Vídeo
 
 Vídeo: [Vídeo Explicativo](https://youtu.be/T6Q3TJRtWpc)
 
 ---
 
-## 📚 Fontes e Referências
+## Fontes e Referências
 
 - [TensorFlow.js - MobileNet](https://github.com/tensorflow/tfjs-models/tree/master/mobilenet)
 - [Documentação oficial do TensorFlow.js](https://www.tensorflow.org/js)
@@ -107,7 +107,7 @@ Vídeo: [Vídeo Explicativo](https://youtu.be/T6Q3TJRtWpc)
 
 ---
 
-## 👨‍💻 Autor
+## Autor 
 
 **Arthur Henrique de Oliveira Petroli**  
 📧 arthurpetroli@alunos.utfpr.edu.br  
@@ -116,6 +116,6 @@ Vídeo: [Vídeo Explicativo](https://youtu.be/T6Q3TJRtWpc)
 
 ---
 
-## 🧠 Licença
+## Licença
 
 Este projeto é de uso livre para fins educacionais e acadêmicos.
