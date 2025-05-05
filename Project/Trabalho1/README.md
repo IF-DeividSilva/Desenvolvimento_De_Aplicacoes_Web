@@ -104,6 +104,7 @@ Vídeo: [Vídeo Explicativo](https://youtu.be/T6Q3TJRtWpc)
 - [TensorFlow.js - MobileNet](https://github.com/tensorflow/tfjs-models/tree/master/mobilenet)
 - [Documentação oficial do TensorFlow.js](https://www.tensorflow.org/js)
 - [MDN Web Docs](https://developer.mozilla.org/)
+- [Google Fonts - Fredoka, Inter](https://fonts.google.com/)
 
 ---
 

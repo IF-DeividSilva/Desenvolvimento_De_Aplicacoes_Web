@@ -69,15 +69,16 @@ Esta aplicação web tem como objetivo oferecer uma experiência de aprendizado 
 - [TensorFlow.js - speech-commands](https://github.com/tensorflow/tfjs-models/tree/master/qna)
 - [Documentação oficial do TensorFlow.js](https://www.tensorflow.org/js)
 - [W3Schools - HTML, CSS, JavaScript](https://www.w3schools.com/)
-
+- [MDN Web Docs - HTML, CSS, JavaScript](https://developer.mozilla.org/pt-BR/)
 
 ---
 ## Autor
 
 - Nome: Deivid da Silva Galvão
+- E-mail: deivid.2002@alunos.utfpr.edu.br
 
 Disciplina: Desenvolvimento de Aplicações Web  
-Professor: Luiz v2
+Professor: Luiz Rodrigues
 
 ---
 
