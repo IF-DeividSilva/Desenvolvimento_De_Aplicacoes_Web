@@ -3,6 +3,7 @@
 // npx create-react-app nome-do-projeto
 // npm install @tensorflow/tfjs @tensorflow-models/qna
 // npm install tensorflow/tfjs
+// npm install
 
 
 
