@@ -1,3 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Estilização geral do corpo da página */
+body {
+  font-family: 'Fredoka', sans-serif; 
+  background: linear-gradient(to right, #d0f0fd, #fffde1); 
+  color: #1e293b; 
+  margin: 0; /* Remove as margens  */
+  padding: 0; /* Remove o espaçamento interno */
+  background-color: #fefefe;
+}
+
+/* Estilização do cabeçalho da página */
+header {
+  background: linear-gradient(to right, #dbeafe, #fef9c3); 
+  color: #1e293b; 
+  padding: 30px; /* Espaçamento interno  */
+  text-align: center; 
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra*/
+}
+
+/* Estilização do título principal (h1) */
+h1 {
+  color: #3b82f6; 
+}
+
+/* Estilização dos subtítulos (h2) */
+h2 {
+  color: #f59e0b; 
+}
+/* Estilização dos títulos de terceiro nível (h3) */
+h3 {
+  color: #f59e0b; 
+}
+
+/* Estilização dos botões */
+button {
+  text-align: center; 
+  width: 25%; /* Define a largura*/
+  background-color: #93c5fd; 
+  color: #1e293b; 
+  border: none; /* Remove bordas */
+  padding: 10px 15px; /* Espaçamento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  cursor: pointer; /* Cursor de mão para indicar interatividade */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Animação suave para mudanças de background e transformação */
+}
+
+/* Efeito ao passar o mouse sobre o botão */
+button:hover {
+  background-color: #3b82f6; 
+  color: #fff; 
+  transform: scale(1.05); /* Leve aumento de tamanho para destaque */
+}
+
+/* Estilização de seções com conteúdo centralizado */
+section {
+  text-align: center; 
+  margin: 20px; /* Espaço externo ao redor da seção */
+  padding: 15px; /* Espaço interno para o conteúdo */
+  background-color: #ffffff; 
+  border-radius: 8px; /* Bordas arredondadas */
+  align-items: center; 
+  width: 46%; /* Define a largura da seção */
+}
+
+/* Estilização da área de texto (textarea) */
+textarea {
+  width: 75%; /* Largura definida como 75% do elemento pai */
+  padding: 10px; 
+  border-radius: 4px; /* Bordas suavemente arredondadas */
+  border: none; /* Remove a borda */
+  resize: vertical; /* Permite redimensionamento apenas na vertical */
+  background-color: #f8fafc; 
+  color: #000; 
+  margin-bottom: 10px; /* Espaço inferior */
+}
+
+/* Estilização de elementos que exibem resultados */
+.result {
+  min-height: 83px; /* Altura mínima para garantir espaço para o conteúdo */
+  color: #2563eb;
+  font-style: italic; /* Texto em itálico */
+  font-weight: bold; /* Texto em negrito */
+  font-size: 1.1em; /* Tamanho ligeiramente maior que o padrão */
+  margin: 30px; /* Margem externa para espaçamento */
+}
+
+/* Elemento de classe "about" posicionado de forma absoluta */
+.about {
+  position: absolute;
+  top: 140px;
+  right: 10px;
+}
+
+/* Elemento de classe "example" posicionado de forma absoluta */
+.example {
+  position: absolute;
+  top: 330px;
+  right: 10px;
+}
+
+/* Estilização do rodapé da página */
+footer {
+  text-align: center;
+  padding: 25px; /* Espaçamento interno*/
+  background-color: #2563eb;
+  color: #fff; 
+  font-size: 1em; 
+  border-top: 5px dashed #fde68a; 
+  position: relative; /* Permite posicionamento interno relativo */
+  width: 100%; /* Ocupa toda a largura disponível */
+}
+
+/*elemento para o rodapé: insere um ícone antes do conteúdo */
+footer::before {
+  content: '👨‍🎓'; /* Define o conteúdo que será exibido (ícone de formatura) */
+  font-size: 2em; /* Aumenta o tamanho do ícone */
+  display: block; /* Exibe o conteúdo como um bloco, ocupando a linha inteira */
+  margin-bottom: 8px; /* Espaço abaixo do ícone para separação do restante do conteúdo */
+}

@@ -1,6 +1,7 @@
 // npm init -y
 // npm start
 // npx create-react-app nome-do-projeto
+// npm install @tensorflow/tfjs @tensorflow-models/qna
 
 
 import React, { useEffect, useState } from 'react';
