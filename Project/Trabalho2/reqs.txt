@@ -1,0 +1,3 @@
+- Colocar um botao de ajuda
+- Colocar uma section para o usurio por vez
+- Tentar usar outra IA
