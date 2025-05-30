@@ -1,77 +1,83 @@
+/* No seu arquivo CSS (ex: App.css) */
+
 /* Estilização geral do corpo da página */
 body {
-  font-family: 'Fredoka', sans-serif; 
-  background: linear-gradient(to right, #d0f0fd, #fffde1); 
-  color: #1e293b; 
-  margin: 0; /* Remove as margens  */
+  font-family: 'Fredoka', sans-serif;
+  background: linear-gradient(to right, #d0f0fd, #fffde1);
+  color: #1e293b;
+  margin: 0; /* Remove as margens */
   padding: 0; /* Remove o espaçamento interno */
-  background-color: #fefefe;
+  /* background-color: #fefefe;  Sobrescrito pelo gradient */
+}
+
+.container {
+  padding-top: 80px; /* Adiciona espaço no topo para não sobrepor o botão de ajuda fixo */
 }
 
 /* Estilização do cabeçalho da página */
 header {
-  background: linear-gradient(to right, #dbeafe, #fef9c3); 
-  color: #1e293b; 
-  padding: 30px; /* Espaçamento interno  */
-  text-align: center; 
+  background: linear-gradient(to right, #dbeafe, #fef9c3);
+  color: #1e293b;
+  padding: 30px; /* Espaçamento interno */
+  text-align: center;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra*/
 }
 
 /* Estilização do título principal (h1) */
 h1 {
-  color: #3b82f6; 
+  color: #3b82f6;
 }
 
 /* Estilização dos subtítulos (h2) */
 h2 {
-  color: #f59e0b; 
+  color: #f59e0b;
 }
 /* Estilização dos títulos de terceiro nível (h3) */
 h3 {
-  color: #f59e0b; 
+  color: #f59e0b;
 }
 
 /* Estilização dos botões */
 button {
-  text-align: center; 
+  text-align: center;
   width: 25%; /* Define a largura*/
-  background-color: #93c5fd; 
-  color: #1e293b; 
+  background-color: #93c5fd;
+  color: #1e293b;
   border: none; /* Remove bordas */
   padding: 10px 15px; /* Espaçamento interno */
   border-radius: 8px; /* Bordas arredondadas */
   cursor: pointer; /* Cursor de mão para indicar interatividade */
   transition: background-color 0.3s ease, transform 0.3s ease; /* Animação suave para mudanças de background e transformação */
+  margin-top: 10px; /* Adicionado para espaçamento entre textarea e botão */
 }
 
 /* Efeito ao passar o mouse sobre o botão */
 button:hover {
-  background-color: #3b82f6; 
-  color: #fff; 
+  background-color: #3b82f6;
+  color: #fff;
   transform: scale(1.05); /* Leve aumento de tamanho para destaque */
 }
 
 /* Estilização de seções com conteúdo centralizado */
 section {
-  text-align: center; 
-  margin: 20px; /* Espaço externo ao redor da seção */
+  text-align: center;
+  margin: 20px auto; /* Centraliza a seção e adiciona margem */
   padding: 15px; /* Espaço interno para o conteúdo */
-  background-color: #ffffff; 
   border-radius: 8px; /* Bordas arredondadas */
-  align-items: center; 
-  width: 46%; /* Define a largura da seção */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave */
 }
 
 /* Estilização da área de texto (textarea) */
 textarea {
-  width: 75%; /* Largura definida como 75% do elemento pai */
-  padding: 10px; 
+  width: 90%; /* Largura ajustada para melhor encaixe */
+  padding: 10px;
   border-radius: 4px; /* Bordas suavemente arredondadas */
-  border: none; /* Remove a borda */
+  border: 1px solid #ccc; /* Borda sutil */
   resize: vertical; /* Permite redimensionamento apenas na vertical */
-  background-color: #f8fafc; 
-  color: #000; 
+  background-color: #f8fafc;
+  color: #000;
   margin-bottom: 10px; /* Espaço inferior */
+  box-sizing: border-box;
 }
 
 /* Estilização de elementos que exibem resultados */
@@ -81,39 +87,161 @@ textarea {
   font-style: italic; /* Texto em itálico */
   font-weight: bold; /* Texto em negrito */
   font-size: 1.1em; /* Tamanho ligeiramente maior que o padrão */
-  margin: 30px; /* Margem externa para espaçamento */
+  margin: 20px auto; /* Ajustado para centralizar e espaçar */
+  padding: 10px;
+  background-color: #f0f8ff;
+  border-radius: 4px;
+  border: 1px dashed #2563eb;
+  word-break: break-word; /* Para quebrar texto longo na resposta */
 }
 
 /* Elemento de classe "about" posicionado de forma absoluta */
 .about {
-  position: absolute;
-  top: 140px;
-  right: 10px;
+  /* Removendo position: absolute para fluxo normal ou ajuste conforme necessário */
+  /* position: absolute; */
+  /* top: 140px; */ /* Posição original, pode precisar de ajuste dependendo do header e outros elementos */
+  /* right: 20px; */ /* Ajustado para não sobrepor o botão help */
+  width: 250px; /* Definir uma largura para melhor layout */
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: left;
+  /* z-index: 999; */ /* Para garantir que não fique abaixo de outros elementos posicionados */
+  /* Ajustei para ser uma seção normal, retirei o position absolute */
+  /* Se quiser de volta, descomente e ajuste as coordenadas top/right */
+  margin: 20px auto; /* Centraliza */
+  width: 46%; /* Mantém a largura das outras seções */
+  text-align: center; /* Centraliza texto interno se preferir */
 }
 
-/* Elemento de classe "example" posicionado de forma absoluta */
-.example {
-  position: absolute;
-  top: 330px;
-  right: 10px;
+.about p {
+    text-align: left; /* Para o texto do parágrafo dentro do about */
 }
 
-/* Estilização do rodapé da página */
+
+
+/* Rodapé */
 footer {
   text-align: center;
-  padding: 25px; /* Espaçamento interno*/
+  padding: 25px;
   background-color: #2563eb;
-  color: #fff; 
-  font-size: 1em; 
-  border-top: 5px dashed #fde68a; 
-  position: relative; /* Permite posicionamento interno relativo */
-  width: 100%; /* Ocupa toda a largura disponível */
+  color: #fff;
+  font-size: 1em;
+  border-top: 5px dashed #fde68a;
+  position: relative;
+  width: 100%;
+  margin-top: 30px; /* Espaço acima do rodapé */
+  box-sizing: border-box;
 }
 
-/*elemento para o rodapé: insere um ícone antes do conteúdo */
 footer::before {
-  content: '👨‍🎓'; /* Define o conteúdo que será exibido (ícone de formatura) */
-  font-size: 2em; /* Aumenta o tamanho do ícone */
-  display: block; /* Exibe o conteúdo como um bloco, ocupando a linha inteira */
-  margin-bottom: 8px; /* Espaço abaixo do ícone para separação do restante do conteúdo */
+  content: '👨‍🎓';
+  font-size: 2em;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* --- Estilos para o Botão de Ajuda e Modal --- */
+.help-button-react {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 0; /* Removido padding para usar width/height para tamanho */
+  background-color: #f59e0b; /* Cor laranja para destaque */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Botão redondo */
+  cursor: pointer;
+  z-index: 1002; /* Acima de outros elementos */
+  font-size: 1.5em; /* Tamanho do ícone ajustado */
+  width: 50px; /* Largura fixa */
+  height: 50px; /* Altura fixa */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  line-height: 50px; /* Centraliza o texto verticalmente */
+}
+.help-button-react:hover {
+  background-color: #d97706; /* Laranja mais escuro no hover */
+  transform: scale(1.1);
+}
+
+.modal-overlay-react {
+  display: flex; /* Usado para centralizar */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1001; /* Acima da maioria dos elementos, abaixo do botão de ajuda */
+}
+
+.modal-content-react {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 700px; /* Largura máxima para o modal */
+  position: relative;
+  max-height: 85vh; /* Altura máxima, um pouco mais de espaço */
+  overflow-y: auto; /* Scroll se o conteúdo for maior */
+  text-align: left; /* Alinhar texto à esquerda dentro do modal */
+}
+
+.modal-content-react h2,
+.modal-content-react h3 {
+  text-align: center; /* Centralizar títulos dentro do modal */
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-content-react .example {
+  /* A seção 'example' dentro do modal */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-shadow: none;
+  background-color: transparent;
+  border-radius: 0; /* Remove border-radius se herdado */
+  text-align: left; /* Para que os h3 e textareas dentro dele se alinhem à esquerda */
+}
+
+.modal-content-react .example h3 {
+  text-align: left; /* Alinha os h3 do example à esquerda */
+}
+
+.modal-content-react .example textarea {
+   width: 100%; /* Ocupa toda a largura do modal-content */
+   box-sizing: border-box;
+   background-color: #f0f0f0; /* Fundo um pouco diferente para os textareas de exemplo */
+   margin-bottom: 15px;
+}
+
+.modal-content-react .example p {
+  background-color: #e9e9e9;
+  padding: 10px;
+  border-radius: 4px;
+  font-family: monospace;
+  word-break: break-word; /* Quebra palavras longas */
+  text-align: left; /* Alinha o parágrafo de exemplo à esquerda */
+  margin-bottom: 20px;
+}
+
+.close-modal-button {
+  display: block;
+  margin: 20px auto 0; /* Centraliza e adiciona margem no topo */
+  width: auto; /* Largura automática baseada no conteúdo */
+  min-width: 120px; /* Largura mínima */
+  background-color: #ef4444; /* Vermelho para fechar */
+  color: white;
+  padding: 10px 20px; /* Ajuste no padding */
+}
+.close-modal-button:hover {
+  background-color: #dc2626; /* Vermelho mais escuro */
 }

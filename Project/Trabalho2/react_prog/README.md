@@ -1,70 +1,177 @@
-# Getting Started with Create React App
+# Aplicação Web Moderna com IA: Resposta a Perguntas em Linguagem Natural
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introdução e Objetivos
 
-## Available Scripts
+Esta aplicação web robustece a experiência de aprendizado interativo, permitindo que usuários obtenham respostas precisas para perguntas baseadas em um texto fornecido. O sistema foi re arquitetado para utilizar uma interface moderna com **React e Material-UI** no frontend, e uma **Inteligência Artificial mais poderosa no backend com Python, FastAPI e Hugging Face Transformers**. O objetivo é oferecer uma ferramenta dinâmica, responsiva e eficiente para processamento de linguagem natural.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Descrição Técnica da Implementação
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Estrutura da Aplicação
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+A aplicação é dividida em duas partes principais:
 
-### `npm test`
+1.  **Frontend (Cliente):**
+    * `src/App.js`: Componente principal da aplicação React, contendo a lógica da interface do usuário e o fluxo de interação.
+    * **Material-UI:** Utilizada para construir a interface do usuário com componentes modernos, responsivos e estilizados.
+    * **Estado e Lógica:** Gerenciamento de estado do React (`useState`) para controlar o fluxo de múltiplos passos (inserção de texto, pergunta, resposta) e a comunicação com o backend.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2.  **Backend (Servidor API):**
+    * `main.py` (ou nome similar): Aplicação FastAPI em Python que expõe endpoints RESTful.
+    * **Hugging Face Transformers:** Biblioteca utilizada para carregar e executar modelos de Question Answering (QA) de última geração (ex: `deepset/roberta-base-squad2`).
+    * **Uvicorn:** Servidor ASGI para rodar a aplicação FastAPI.
 
-### `npm run build`
+3.  **Comunicação:**
+    * O frontend envia o texto de contexto e a pergunta do usuário para o backend via uma requisição HTTP POST para um endpoint da API RESTful.
+    * O backend processa a requisição usando o modelo de IA e retorna a resposta em formato JSON.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Funcionalidades
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+-   Interface de usuário moderna e intuitiva construída com React e Material-UI.
+-   Fluxo de interação guiado em múltiplos passos:
+    1.  Inserção do texto de contexto pelo usuário.
+    2.  Exibição do contexto salvo e inserção da pergunta.
+    3.  Apresentação da resposta fornecida pela IA.
+    4.  Opções para fazer uma nova pergunta sobre o mesmo texto ou para inserir um novo texto (limpando o estado atual).
+-   Utilização de um modelo avançado de Question Answering (Hugging Face Transformers) no backend para maior precisão.
+-   Extração automática de respostas diretamente do conteúdo inserido pelo usuário, processada no servidor.
+-   Modal de ajuda com exemplo prático para facilitar o primeiro uso.
+-   Interface responsiva, adaptando-se a diferentes tamanhos de tela, graças ao Material-UI e técnicas de design responsivo.
+-   Estilo visual profissional e consistente provido pelo Material-UI.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## Tecnologias Utilizadas
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Frontend:
+-   **React**: Biblioteca JavaScript para construção de interfaces de usuário.
+-   **Material-UI (MUI)**: Biblioteca de componentes React para um design mais rápido e fácil, seguindo o Material Design.
+-   **JavaScript (ES6+)**: Linguagem de programação principal do frontend.
+-   **HTML5 & CSS3**: Estrutura e estilização base (amplamente gerenciados pelo React e MUI).
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Backend:
+-   **Python**: Linguagem de programação principal do backend.
+-   **FastAPI**: Framework web moderno e de alta performance para construir APIs com Python.
+-   **Uvicorn**: Servidor ASGI para FastAPI.
+-   **Hugging Face `transformers`**: Biblioteca para modelos de NLP de última geração.
+-   **PyTorch** (ou TensorFlow): Backend para os modelos da Hugging Face.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Comunicação:
+-   **API RESTful**: Padrão de arquitetura para a comunicação entre frontend e backend.
+-   **JSON**: Formato de troca de dados.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## Instruções de Execução Local
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Para executar este projeto localmente, você precisará rodar o backend (FastAPI) e o frontend (React) separadamente, em terminais diferentes.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 1. Backend (API com FastAPI)
 
-### Code Splitting
+   a. **Navegue até a pasta do backend** (onde está seu arquivo `main.py` e o ambiente virtual `venv-qna`).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   b. **Ative o ambiente virtual Python:**
+      ```bash
+      # No Windows
+      venv-qna\Scripts\activate
+      # No macOS/Linux
+      # source venv-qna/bin/activate
+      ```
 
-### Analyzing the Bundle Size
+   c. **Instale as dependências (se ainda não o fez):**
+      ```bash
+      pip install fastapi uvicorn "transformers[torch]" torch
+      ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   d. **Inicie o servidor FastAPI:**
+      ```bash
+      uvicorn main:app --reload
+      ```
+      Por padrão, o servidor FastAPI estará rodando em `http://localhost:8000`.
 
-### Making a Progressive Web App
+### 2. Frontend (Aplicação React)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   a. **Navegue até a pasta do frontend** (onde está seu `package.json` e a pasta `src`).
 
-### Advanced Configuration
+   b. **Instale as dependências do Node.js (se ainda não o fez):**
+      ```bash
+      npm install
+      # ou, se você usa yarn:
+      # yarn install
+      ```
+      Certifique-se de ter instalado as dependências do Material-UI:
+      ```bash
+      npm install @mui/material @emotion/react @emotion/styled
+      ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+   c. **Inicie a aplicação React:**
+      ```bash
+      npm start
+      # ou, se você usa yarn:
+      # yarn start
+      ```
+      Por padrão, a aplicação React estará rodando em `http://localhost:3000` e abrirá automaticamente no seu navegador.
 
-### Deployment
+**Importante:** Ambos os servidores (backend e frontend) precisam estar rodando simultaneamente para que a aplicação funcione completamente.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## Instruções para Usar o Site
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+A aplicação guia o usuário através de um processo de três passos principais:
+
+1.  **Passo 1: Escrever o Texto de Contexto**
+    * A tela inicial apresentará a seção "1. Escreva seu texto aqui:".
+    * Digite ou cole o texto que servirá de base para as perguntas no campo fornecido.
+    * Clique no botão "Save Text".
+    * [Local para Imagem: Tela inicial com foco na área de inserção de texto]
+
+2.  **Passo 2: Escrever a Pergunta**
+    * Após salvar o texto, a seção anterior é substituída.
+    * O "Contexto Salvo" será exibido para referência.
+    * Abaixo, a seção "2. Escreva sua pergunta:" aparecerá.
+    * Digite sua pergunta relacionada ao contexto no campo fornecido.
+    * Clique no botão "Ask".
+    * [Local para Imagem: Tela mostrando o contexto salvo e a área para inserir a pergunta]
+
+3.  **Passo 3: Visualizar a Resposta**
+    * Após clicar em "Ask", a aplicação mostrará "Analisando sua pergunta com a API...".
+    * Em seguida, a seção "3. Sua resposta:" exibirá a resposta encontrada pela IA.
+    * Abaixo da resposta, você terá botões para:
+        * "Fazer outra pergunta (mesmo texto)": Retorna ao Passo 2, mantendo o contexto atual.
+        * "Inserir Novo Texto (Limpar Tudo)": Limpa todos os dados e retorna ao Passo 1.
+    * [Local para Imagem: Tela exibindo a resposta da IA e as opções de próximos passos]
+
+**Funcionalidades Adicionais:**
+
+* **Ajuda/Exemplo de Uso:** Um botão no topo da página abre um modal com um exemplo de texto, perguntas e respostas para demonstrar o funcionamento.
+* **Começar Novamente (Limpar Tudo):** Um botão no topo (visível a partir do Passo 2) permite limpar todos os campos e voltar ao Passo 1 a qualquer momento.
+
+---
+
+## Link para Vídeo Explicativo (Exemplo)
+-   `[Link para seu vídeo aqui, se houver]` (ex: video_demonstracao.mp4)
+
+---
+
+## Referências e Links de Apoio
+
+-   **React:** [https://reactjs.org/docs/getting-started.html](https://reactjs.org/docs/getting-started.html)
+-   **Material-UI (MUI):** [https://mui.com/getting-started/installation/](https://mui.com/getting-started/installation/)
+-   **FastAPI:** [https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
+-   **Hugging Face Transformers:** [https://huggingface.co/docs/transformers/index](https://huggingface.co/docs/transformers/index)
+-   **Python:** [https://docs.python.org/3/](https://docs.python.org/3/)
+-   **MDN Web Docs - HTML, CSS, JavaScript:** [https://developer.mozilla.org/pt-BR/docs/Web](https://developer.mozilla.org/pt-BR/docs/Web)
+
+---
+
+## Autor
+
+-   **Nome:** Deivid da Silva Galvão
+-   **E-mail:** deivid.2002@alunos.utfpr.edu.br
+
+**Disciplina:** Desenvolvimento de Aplicações Web
+**Professor:** Luiz Rodrigues
+
+---

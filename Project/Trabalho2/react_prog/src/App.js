@@ -1,150 +1,203 @@
-// npm init -y
-// npm start
-// npx create-react-app nome-do-projeto
-// npm install @tensorflow/tfjs @tensorflow-models/qna
-// npm install tensorflow/tfjs
-// npm install
+// App.js
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Paper from '@mui/material/Paper';
 
+const API_URL = 'http://localhost:8000/answer-question/';
 
-
-import React, { useEffect, useState } from 'react';
-import * as qna from '@tensorflow-models/qna';
-import '@tensorflow/tfjs'; // Necessário para o funcionamento do TensorFlow
+const styleModal = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '80%',
+  maxWidth: 600,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  overflowY: 'auto',
+  maxHeight: '90vh',
+};
 
 function App() {
-  // Estados para o texto, pergunta, resposta e passagem salva
   const [textInput, setTextInput] = useState('');
   const [passage, setPassage] = useState('');
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [model, setModel] = useState(null);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
-  // Carrega o modelo apenas uma vez quando o componente monta
-  useEffect(() => {
-    qna
-      .load()
-      .then((loadedModel) => setModel(loadedModel))
-      .catch((e) => console.error('Erro ao carregar o modelo:', e));
-  }, []);
-
-  // Função que salva o texto inserido em um estado de "passage"
   const saveText = () => {
+    if (!textInput.trim()) {
+      alert('Por favor, escreva um texto antes de salvar.');
+      return;
+    }
     setPassage(textInput);
     alert('Texto salvo com sucesso!');
+    setCurrentStep(2);
   };
 
-  // Função para responder à pergunta baseada no texto salvo
-  const answering = () => {
+  const answering = async () => {
     if (!passage.trim()) {
-      alert('Por favor, escreva um texto para processeguir...');
+      alert('Erro: Nenhum texto de contexto foi salvo.');
+      setCurrentStep(1);
       return;
     }
     if (!question.trim()) {
       alert('Por favor, escreva a sua pergunta.');
       return;
     }
-    if (!model) {
-      alert('O modelo ainda não foi carregado. Por favor, aguarde...');
-      return;
-    }
-
-    setAnswer('Analyzing your question...');
-    model
-      .findAnswers(question, passage)
-      .then((answers) => {
-        if (answers && answers.length > 0) {
-          setAnswer(answers[0].text);
-        } else {
-          setAnswer('No answer found.');
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setAnswer('Erro ao obter resposta.');
+    setAnswer('Analisando sua pergunta com a API...');
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passage, question }),
       });
+      let responseMessage = '';
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: 'Erro desconhecido na API.' }));
+        console.error('Erro da API:', errorData);
+        responseMessage = `Erro ao obter resposta da API: ${errorData.detail || response.statusText}`;
+      } else {
+        const data = await response.json();
+        if (data.error) {
+          responseMessage = data.error;
+        } else if (data.answer) {
+          responseMessage = data.answer ;
+        } else {
+          responseMessage = 'Nenhuma resposta encontrada pela API.';
+        }
+      }
+      setAnswer(responseMessage);
+      setCurrentStep(3);
+    } catch (err) {
+      console.error('Erro ao conectar com a API:', err);
+      setAnswer('Erro de conexão ao tentar obter resposta. A API está rodando?');
+      setCurrentStep(3);
+    }
+  };
+
+  const toggleHelpModal = () => {
+    setShowHelpModal(!showHelpModal);
+  };
+
+  const startOver = () => {
+    setTextInput('');
+    setPassage('');
+    setQuestion('');
+    setAnswer('');
+    setCurrentStep(1);
   };
 
   return (
-    <div className="container">
-      <header>
-        <h1>IA para Resposta a perguntas em linguagem natural</h1>
-      </header>
+    <Container maxWidth="lg">
+      {/* <CssBaseline /> */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 1, flexWrap: 'wrap', gap: 1 }}>
+        <Button variant="outlined" onClick={toggleHelpModal} title="Ajuda/Examplo de Uso">
+          Ajuda/Examplo de Uso
+        </Button>
+        {currentStep > 1 && (
+            <Button variant="outlined" color="warning" onClick={startOver}>
+                Começar Novamente (Limpar Tudo)
+            </Button>
+        )}
+      </Box>
 
-      {/* Seção para inserir o texto */}
-      <section className="text">
-        <h2>Write your text:</h2>
-        <textarea
-          id="text-input"
-          placeholder="Enter your text here..."
-          value={textInput}
-          onChange={(e) => setTextInput(e.target.value)}
-        />
-        <button onClick={saveText}>Save Text</button>
-      </section>
+      <Modal open={showHelpModal} onClose={toggleHelpModal} aria-labelledby="help-modal-title" aria-describedby="help-modal-description">
+        <Box sx={styleModal}>
+          <Typography id="help-modal-title" variant="h6" component="h2" gutterBottom>Examplo de Uso</Typography>
+          <Box component="section" id="help-modal-description">
+            <Typography variant="subtitle1" component="h3" gutterBottom>Escreva seu texto:</Typography>
+            <TextField fullWidth multiline readOnly rows={5} variant="outlined" value={`A Revolução Francesa foi um período de intensa agitação social e política na França que durou de 1789 a 1799. Ela teve um impacto profundo e duradouro não apenas na história francesa, mas em toda a Europa e no mundo ocidental. A revolução derrubou a monarquia absolutista, estabeleceu uma república e culminou com a ascensão de Napoleão Bonaparte. Entre suas causas principais estavam a crise financeira do Estado francês, a desigualdade social com a divisão em três estados (clero, nobreza e povo), e a influência das ideias iluministas que questionavam o poder absoluto dos reis e os privilégios da nobreza e do clero. A Queda da Bastilha em 14 de julho de 1789 é considerada o marco inicial da revolução.`} sx={{ mb: 2 }} />
+            <Typography variant="subtitle1" component="h3" gutterBottom>Escreva sua pergunta:</Typography>
+            <TextField fullWidth multiline readOnly rows={2} variant="outlined" value={`Qual evento é considerado o marco inicial da Revolução Francesa?`} sx={{ mb: 2 }} />
+            <TextField fullWidth multiline readOnly rows={2} variant="outlined" value={`Quem ascendeu ao poder ao final do período revolucionário?`} sx={{ mb: 2 }} />
+            <Typography variant="subtitle1" component="h3" gutterBottom>Sua Respota (Examplo):</Typography>
+            <Typography variant="body1" sx={{ p: 1, border: '1px solid lightgray', borderRadius: 1 }}>A Queda da Bastilha</Typography>
+            <Typography variant="body1" sx={{ p: 1, border: '1px solid lightgray', borderRadius: 1 }}>Napoleão Bonaparte </Typography>
+          </Box>
+          <Box sx={{ mt: 3, textAlign: 'right' }}><Button variant="contained" onClick={toggleHelpModal}>Close</Button></Box>
+        </Box>
+      </Modal>
 
-      {/* Seção para inserir a pergunta */}
-      <section className="question">
-        <h2>Write your ask:</h2>
-        <textarea
-          id="ask-input"
-          placeholder="Enter your question here..."
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-        />
-        <button onClick={answering}>Ask</button>
-      </section>
+      <Box sx={{ my: 2 }}>
+        <Box component="header" sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1">IA para Resposta a perguntas em linguagem natural (via API)</Typography>
+        </Box>
 
-      {/* Seção para exibir a resposta */}
-      <section className="answer">
-        <h2>Your Answer:</h2>
-        <div id="results" className="result">
-          {answer}
-        </div>
-      </section>
+        {currentStep === 1 && (
+          <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+            <Box component="section">
+              <Typography variant="h5" component="h2" gutterBottom>1. Escreva seu texto aqui:</Typography>
+              <TextField id="text-input" label="Escreva seu texto aqui..." placeholder="Escreva seu texto aqui..." multiline rows={6} fullWidth value={textInput} onChange={(e) => setTextInput(e.target.value)} variant="outlined" sx={{ mb: 2 }} />
+              <Button variant="contained" color="primary" onClick={saveText} disabled={!textInput.trim()}>Salvar Texto</Button>
+            </Box>
+          </Paper>
+        )}
 
-      {/* Seção "About" */}
-      <section className="about">
-        <h2>About Us</h2>
-        <p>
-          Our platform was designed to provide quick and accurate answers to your
-          questions on any subject. With an intuitive interface, simply enter your
-          text and ask your question, and our system will take care of the rest—
-          delivering relevant and clear responses.
-        </p>
-      </section>
+        {currentStep >= 2 && passage && (
+            <Paper elevation={1} sx={{ p:2, mb:3, backgroundColor: 'grey.100'}}>
+                <Typography variant="h6" gutterBottom>Contexto Salvo:</Typography>
+                <Typography variant="body2" component="pre" sx={{whiteSpace: 'pre-wrap', maxHeight: '150px', overflowY: 'auto', p:1, border: '1px dashed grey', borderRadius:1, background: '#fff'}}>
+                    {passage}
+                </Typography>
+            </Paper>
+        )}
 
-      {/* Seção de exemplo */}
-      <section className="example">
-        <h2>Example of use</h2>
-        <h3>Write your text:</h3>
-        <textarea
-          readOnly
-          rows="4"
-          cols="50"
-          value={`Newton's laws of motion describe how objects move. The first law states that an object at rest stays at rest unless acted upon by an external force. The second law explains that force equals mass times acceleration. The third law states that for every action, there is an equal and opposite reaction. These laws are fundamental in mechanics.`}
-        />
+        {currentStep === 2 && (
+          <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+            <Box component="section">
+              <Typography variant="h5" component="h2" gutterBottom>2. Write your ask:</Typography>
+              <TextField id="ask-input" label="Escreva seu texto aqui..." placeholder="Escreva seu texto aqui..." multiline rows={4} fullWidth value={question} onChange={(e) => setQuestion(e.target.value)} variant="outlined" sx={{ mb: 2 }} />
+              <Button variant="contained" color="secondary" onClick={answering} disabled={!question.trim()}>Perguntar</Button>
+            </Box>
+          </Paper>
+        )}
 
-        <h3>Write your ask:</h3>
-        <textarea
-          readOnly
-          rows="3"
-          cols="50"
-          value={`What is Newton's first law of motion?`}
-        />
+        {currentStep === 3 && (
+          <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+            <Box component="section">
+              <Typography variant="h5" component="h2" gutterBottom>3. Sua resposta:</Typography>
+              <Box id="results" sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1, minHeight: '60px', whiteSpace: 'pre-wrap' }}>
+                <Typography variant="body1">{answer || "Processando..."}</Typography>
+              </Box>
+              <Box sx={{mt: 2, display: 'flex', flexWrap: 'wrap', gap: 2}}> {/* Adicionado flexWrap e gap */}
+                <Button variant="outlined" color="primary" onClick={() => { setQuestion(''); setAnswer(''); setCurrentStep(2); }}>
+                    Fazer outra pergunta (mesmo texto)
+                </Button>
+                <Button variant="contained" color="successo" onClick={startOver}> {/* Usando 'successo' para cor verde */}
+                    Inserir Novo Texto (Limpar Tudo)
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        )}
 
-        <h3>Your Answer:</h3>
-        <p>
-          an object at rest stays at rest unless acted upon by an external force
-        </p>
-      </section>
-
-      <footer>
-        <p>Desenvolvido por Deivid da Silva Galvão</p>
-        <p>Data: 01/05/2025</p>
-        <p>Email: deivid.2002@alunos.utfpr.edu.br</p>
-        <p>&copy; 2025 UTFPR-EngComp - Um projeto para auxiliar no aprendizado.</p>
-      </footer>
-    </div>
+        {(currentStep >=1) && (
+            <>
+                <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+                <Box component="section">
+                    <Typography variant="h5" component="h2" gutterBottom>Sobre nós</Typography>
+                    <Typography variant="body1" paragraph>Nossa plataforma foi projetada para fornecer respostas rápidas e precisas às suas perguntas sobre qualquer assunto. Com uma interface intuitiva, basta inserir seu texto e fazer sua pergunta, e nosso sistema de IA (via API) cuidará do resto — entregando respostas relevantes e claras.</Typography>
+                </Box>
+                </Paper>
+                <Box component="footer" sx={{ textAlign: 'center', mt: 5, py: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="body2" color="textSecondary">Desenvolvido por Deivid da Silva Galvão</Typography>
+                <Typography variant="body2" color="textSecondary">Data: {new Date().toLocaleDateString('pt-BR')}</Typography>
+                <Typography variant="body2" color="textSecondary">Email: deivid.2002@alunos.utfpr.edu.br</Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>&copy; {new Date().getFullYear()} UTFPR-EngComp - Um projeto para auxiliar no aprendizado.</Typography>
+                </Box>
+            </>
+        )}
+      </Box>
+    </Container>
   );
 }
 
