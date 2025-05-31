@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Adicione qualquer CSS personalizado APÓS as diretivas do Tailwind */
+body {
+  @apply bg-gray-50;
+  margin: 0;
+  font-family: sans-serif;
+}
