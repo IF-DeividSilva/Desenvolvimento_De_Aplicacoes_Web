@@ -1,3 +1,4 @@
+# Para rodar: uvicorn main:app --reload
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import pipeline
@@ -10,7 +11,7 @@ class QARequest(BaseModel):
 
 class QAResponse(BaseModel):
     answer: str
-    score: float # Opcional: confiança do modelo
+    score: float 
     error: str = None
 
 # --- Inicialização do FastAPI App ---
@@ -79,9 +80,7 @@ async def answer_question(request_data: QARequest):
         print(f"Erro durante o processamento da Q&A: {e}")
         raise HTTPException(status_code=500, detail=f"Erro interno ao processar a pergunta: {str(e)}")
 
-# --- Endpoint de Health Check (opcional, mas bom para verificar se a API está no ar) ---
+# --- Endpoint de Health Check
 @app.get("/")
 async def root():
     return {"message": "Q&A API está funcionando!"}
-
-# Para rodar: uvicorn main:app --reload
