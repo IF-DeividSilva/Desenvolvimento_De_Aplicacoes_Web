@@ -126,7 +126,7 @@ A aplicação guia o usuário através de um processo de três passos principais
     * A tela inicial apresentará a seção "1. Escreva seu texto aqui:".
     * Digite ou cole o texto que servirá de base para as perguntas no campo fornecido.
     * Clique no botão "Save Text".
-    * ![img](./img/p11.png)  
+    * ![img](././img/p11.png)  
 
 2.  **Passo 2: Escrever a Pergunta**
     * Após salvar o texto, a seção anterior é substituída.
