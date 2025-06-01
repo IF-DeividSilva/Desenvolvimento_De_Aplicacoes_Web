@@ -328,7 +328,8 @@ O código completo está amplamente comentado para facilitar o entendimento e ma
 ## Vídeo
 
 Vídeo demonstrativo1: [Vídeo Explicativo](https://youtu.be/T6Q3TJRtWpc)
-Vídeo demonstrativo2: [Vídeo Explicativo](https://youtu.be/T6Q3TJRtWpc)
+
+Vídeo demonstrativo2: [Vídeo Explicativo](https://youtu.be/GjGauqGPA5Y)
 
 Este vídeo de 30 segundos demonstra o funcionamento da aplicação, desde o upload da imagem até a exibição dos resultados da classificação.
 
