@@ -16,7 +16,7 @@ body {
 
 /* Estilização do cabeçalho da página */
 header {
-  background: linear-gradient(to right, #dbeafe, #fef9c3);
+  background: #0773ff;
   color: #1e293b;
   padding: 30px; /* Espaçamento interno */
   text-align: center;
@@ -25,7 +25,7 @@ header {
 
 /* Estilização do título principal (h1) */
 h1 {
-  color: #3b82f6;
+  color: #ffffff;
 }
 
 /* Estilização dos subtítulos (h2) */
@@ -39,16 +39,17 @@ h3 {
 
 /* Estilização dos botões */
 button {
-  text-align: center;
-  width: 25%; /* Define a largura*/
-  background-color: #93c5fd;
-  color: #1e293b;
-  border: none; /* Remove bordas */
-  padding: 10px 15px; /* Espaçamento interno */
-  border-radius: 8px; /* Bordas arredondadas */
-  cursor: pointer; /* Cursor de mão para indicar interatividade */
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Animação suave para mudanças de background e transformação */
-  margin-top: 10px; /* Adicionado para espaçamento entre textarea e botão */
+  font-family: inherit;
+  background-color: #fef9c3;
+  color: #374151;
+  padding: 14px 28px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 /* Efeito ao passar o mouse sobre o botão */
@@ -128,11 +129,8 @@ footer {
   background-color: #2563eb;
   color: #fff;
   font-size: 1em;
+  margin-top: 60px;
   border-top: 5px dashed #fde68a;
-  position: relative;
-  width: 100%;
-  margin-top: 30px; /* Espaço acima do rodapé */
-  box-sizing: border-box;
 }
 
 footer::before {

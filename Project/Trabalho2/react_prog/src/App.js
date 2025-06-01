@@ -100,8 +100,8 @@ function App() {
     <Container maxWidth="lg">
       {/* <CssBaseline /> */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 1, flexWrap: 'wrap', gap: 1 }}>
-        <Button variant="outlined" onClick={toggleHelpModal} title="Ajuda/Examplo de Uso">
-          Ajuda/Examplo de Uso
+        <Button variant="outlined" onClick={toggleHelpModal} title="Examplo de Uso">
+          Examplo de Uso
         </Button>
         {currentStep > 1 && (
             <Button variant="outlined" color="warning" onClick={startOver}>

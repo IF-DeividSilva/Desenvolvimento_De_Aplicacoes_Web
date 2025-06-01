@@ -70,6 +70,7 @@ Para executar este projeto localmente, você precisará rodar o backend (FastAPI
 ### 1. Backend (API com FastAPI)
 
    a. **Navegue até a pasta do backend** (onde está seu arquivo `main.py` e o ambiente virtual `venv-qna`).
+        python -m venv venv-qna
 
    b. **Ative o ambiente virtual Python:**
       ```bash
@@ -125,7 +126,7 @@ A aplicação guia o usuário através de um processo de três passos principais
     * A tela inicial apresentará a seção "1. Escreva seu texto aqui:".
     * Digite ou cole o texto que servirá de base para as perguntas no campo fornecido.
     * Clique no botão "Save Text".
-    * [Local para Imagem: Tela inicial com foco na área de inserção de texto]
+    * ![img](Desenvolvimento_De_Aplicacoes_Web\Project\Trabalho2\img\p11.png)  
 
 2.  **Passo 2: Escrever a Pergunta**
     * Após salvar o texto, a seção anterior é substituída.
@@ -151,7 +152,9 @@ A aplicação guia o usuário através de um processo de três passos principais
 ---
 
 ## Link para Vídeo Explicativo (Exemplo)
--   `[Link para seu vídeo aqui, se houver]` (ex: video_demonstracao.mp4)
+
+- [Video.mp4](https://youtu.be/8sgoZhAJkr8)   
+`[Link para seu vídeo aqui, se houver]` (ex: video_demonstracao.mp4)
 
 ---
 
