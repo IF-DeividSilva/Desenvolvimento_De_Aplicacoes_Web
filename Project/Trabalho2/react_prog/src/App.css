@@ -2,25 +2,25 @@
 
 /* Estilização geral do corpo da página */
 body {
-  font-family: 'Fredoka', sans-serif;
+/*  font-family: 'Fredoka', sans-serif;*/
   background: linear-gradient(to right, #d0f0fd, #fffde1);
   color: #1e293b;
-  margin: 0; /* Remove as margens */
-  padding: 0; /* Remove o espaçamento interno */
+  /*margin: 0; /* Remove as margens */
+  /*padding: 0; /* Remove o espaçamento interno */
   /* background-color: #fefefe;  Sobrescrito pelo gradient */
 }
-
+/*
 .container {
   padding-top: 80px; /* Adiciona espaço no topo para não sobrepor o botão de ajuda fixo */
-}
+/*}*/
 
 /* Estilização do cabeçalho da página */
 header {
   background: #0773ff;
   color: #1e293b;
   padding: 30px; /* Espaçamento interno */
-  text-align: center;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra*/
+/* text-align: center;
+*/box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra*/
 }
 
 /* Estilização do título principal (h1) */
@@ -38,7 +38,7 @@ h3 {
 }
 
 /* Estilização dos botões */
-button {
+/*button {
   font-family: inherit;
   background-color: #fef9c3;
   color: #374151;
@@ -53,11 +53,10 @@ button {
 }
 
 /* Efeito ao passar o mouse sobre o botão */
-button:hover {
+/*button:hover {
   background-color: #3b82f6;
   color: #fff;
-  transform: scale(1.05); /* Leve aumento de tamanho para destaque */
-}
+  transform: scale(1.05); /* Leve aumento de tamanho para destaque }*/
 
 /* Estilização de seções com conteúdo centralizado */
 section {
@@ -69,58 +68,32 @@ section {
 }
 
 /* Estilização da área de texto (textarea) */
-textarea {
+/*textarea {
   width: 90%; /* Largura ajustada para melhor encaixe */
-  padding: 10px;
-  border-radius: 4px; /* Bordas suavemente arredondadas */
-  border: 1px solid #ccc; /* Borda sutil */
-  resize: vertical; /* Permite redimensionamento apenas na vertical */
-  background-color: #f8fafc;
+/*  padding: 10px;
+/*  border-radius: 4px; /* Bordas suavemente arredondadas */
+/*  border: 1px solid #ccc; /* Borda sutil */
+/*  resize: vertical; /* Permite redimensionamento apenas na vertical */
+/*  background-color: #f8fafc;
   color: #000;
   margin-bottom: 10px; /* Espaço inferior */
-  box-sizing: border-box;
+/*  box-sizing: border-box;
 }
 
 /* Estilização de elementos que exibem resultados */
-.result {
+/*.result {
   min-height: 83px; /* Altura mínima para garantir espaço para o conteúdo */
-  color: #2563eb;
-  font-style: italic; /* Texto em itálico */
-  font-weight: bold; /* Texto em negrito */
-  font-size: 1.1em; /* Tamanho ligeiramente maior que o padrão */
-  margin: 20px auto; /* Ajustado para centralizar e espaçar */
-  padding: 10px;
+/*  color: #2563eb;
+/*  font-style: italic; /* Texto em itálico */
+/*  font-weight: bold; /* Texto em negrito */
+/*  font-size: 1.1em; /* Tamanho ligeiramente maior que o padrão */
+/*  margin: 20px auto; /* Ajustado para centralizar e espaçar */
+/*  padding: 10px;
   background-color: #f0f8ff;
   border-radius: 4px;
   border: 1px dashed #2563eb;
   word-break: break-word; /* Para quebrar texto longo na resposta */
-}
-
-/* Elemento de classe "about" posicionado de forma absoluta */
-.about {
-  /* Removendo position: absolute para fluxo normal ou ajuste conforme necessário */
-  /* position: absolute; */
-  /* top: 140px; */ /* Posição original, pode precisar de ajuste dependendo do header e outros elementos */
-  /* right: 20px; */ /* Ajustado para não sobrepor o botão help */
-  width: 250px; /* Definir uma largura para melhor layout */
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: left;
-  /* z-index: 999; */ /* Para garantir que não fique abaixo de outros elementos posicionados */
-  /* Ajustei para ser uma seção normal, retirei o position absolute */
-  /* Se quiser de volta, descomente e ajuste as coordenadas top/right */
-  margin: 20px auto; /* Centraliza */
-  width: 46%; /* Mantém a largura das outras seções */
-  text-align: center; /* Centraliza texto interno se preferir */
-}
-
-.about p {
-    text-align: left; /* Para o texto do parágrafo dentro do about */
-}
-
-
+/*}
 
 /* Rodapé */
 footer {

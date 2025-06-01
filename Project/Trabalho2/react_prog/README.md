@@ -189,7 +189,7 @@ A aplicação guia o usuário através de um processo de três passos principais
 
 ## Link para Vídeo Explicativo
 
--   **Vídeo Demonstrativo (até 30 segundos):** [Video.mp4](https://youtu.be/8sgoZhAJkr8) (substitua pelo link real do seu vídeo)
+-   **Vídeo Demonstrativo:** [Video.mp4](https://youtu.be/8sgoZhAJkr8) 
 
 ---
 

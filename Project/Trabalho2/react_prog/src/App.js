@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -6,7 +5,7 @@ import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-// Importando os novos componentes
+// Importando os componentes e a API
 import Header from './components/Header';
 import HelpModal from './components/HelpModal';
 import PassageInput from './components/PassageInput';
@@ -18,27 +17,28 @@ import Footer from './components/Footer';
 
 const API_URL = 'http://localhost:8000/answer-question/';
 
-// Criação do tema 
+// Criação do tema para o Material-UI
 let theme = createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   },
   palette: {
-    // primary: { main: '#1976d2' },
-    // secondary: { main: '#dc004e' },
      success: { main: '#2e7d32'}, 
   },
 });
 theme = responsiveFontSizes(theme);
 
+// Função principal do aplicativo React
 function App() {
-  const [textInput, setTextInput] = useState('');
-  const [passage, setPassage] = useState('');
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [showHelpModal, setShowHelpModal] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
+  // Estados para armazenar os dados do usuário e controle de fluxo
+  const [textInput, setTextInput] = useState(''); // Texto digitado pelo usuário
+  const [passage, setPassage] = useState('');     // Texto salvo como contexto
+  const [question, setQuestion] = useState('');   // Pergunta do usuário
+  const [answer, setAnswer] = useState('');       // Resposta da API
+  const [showHelpModal, setShowHelpModal] = useState(false); // Controle do modal de ajuda
+  const [currentStep, setCurrentStep] = useState(1);         // Passo atual do fluxo
 
+  // Função para salvar o texto de contexto
   const saveText = () => {
     if (!textInput.trim()) {
       alert('Por favor, escreva um texto antes de salvar.');
@@ -46,9 +46,10 @@ function App() {
     }
     setPassage(textInput);
     alert('Texto salvo com sucesso!');
-    setCurrentStep(2);
+    setCurrentStep(2); // Avança para o próximo passo
   };
 
+  // Função para enviar a pergunta para a API e obter a resposta
   const answering = async () => {
     if (!passage.trim()) {
       alert('Erro: Nenhum texto de contexto foi salvo.');
@@ -68,10 +69,12 @@ function App() {
       });
       let responseMessage = '';
       if (!response.ok) {
+        // Trata erro da API
         const errorData = await response.json().catch(() => ({ detail: 'Erro desconhecido na API.' }));
         console.error('Erro da API:', errorData);
         responseMessage = `Erro ao obter resposta da API: ${errorData.detail || response.statusText}`;
       } else {
+        // Resposta bem-sucedida
         const data = await response.json();
         if (data.error) {
           responseMessage = data.error;
@@ -82,18 +85,21 @@ function App() {
         }
       }
       setAnswer(responseMessage);
-      setCurrentStep(3);
+      setCurrentStep(3); // Avança para o passo de exibição da resposta
     } catch (err) {
+      // Erro de conexão com a API
       console.error('Erro ao conectar com a API:', err);
       setAnswer('Erro de conexão ao tentar obter resposta. A API está rodando?');
       setCurrentStep(3);
     }
   };
 
+  // Alterna a exibição do modal de ajuda
   const toggleHelpModal = () => {
     setShowHelpModal(!showHelpModal);
   };
 
+  // Reinicia todo o fluxo e limpa os dados
   const startOver = () => {
     setTextInput('');
     setPassage('');
@@ -102,10 +108,12 @@ function App() {
     setCurrentStep(1);
   };
 
+  // Renderização do componente
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="lg">
+        {/* Barra superior com botões de ajuda e reinício */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: {xs:1, sm:2}, py:1, flexWrap: 'wrap', gap: 1 }}>
           <Button variant="outlined" onClick={toggleHelpModal} title="Examplo de Uso">
             Examplo de Uso
@@ -117,11 +125,14 @@ function App() {
           )}
         </Box>
 
+        {/* Modal de ajuda */}
         <HelpModal open={showHelpModal} onClose={toggleHelpModal} />
 
         <Box sx={{ my: { xs: 2, sm: 3 } }}>
+          {/* Cabeçalho */}
           <Header />
 
+          {/* Passo 1: Entrada do texto de contexto */}
           {currentStep === 1 && (
             <PassageInput
               textInput={textInput}
@@ -130,8 +141,10 @@ function App() {
             />
           )}
 
+          {/* Exibe o contexto salvo a partir do passo 2 */}
           {currentStep >= 2 && <SavedContext passage={passage} />}
 
+          {/* Passo 2: Entrada da pergunta */}
           {currentStep === 2 && (
             <QuestionInput
               question={question}
@@ -140,6 +153,7 @@ function App() {
             />
           )}
 
+          {/* Passo 3: Exibição da resposta */}
           {currentStep === 3 && (
             <AnswerDisplay
               answer={answer}
@@ -152,7 +166,7 @@ function App() {
             />
           )}
 
-          {/* Renderiza About e Footer independentemente do passo*/}
+          {/* Seções About e Footer sempre visíveis */}
           <AboutSection />
           <Footer />
         </Box>
