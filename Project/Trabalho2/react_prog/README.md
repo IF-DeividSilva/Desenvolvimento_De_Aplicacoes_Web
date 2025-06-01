@@ -125,7 +125,7 @@ A aplicação guia o usuário através de um processo de três passos principais
 1.  **Passo 1: Escrever o Texto de Contexto**
     * A tela inicial apresentará a seção "1. Escreva seu texto aqui:".
     * Digite ou cole o texto que servirá de base para as perguntas no campo fornecido.
-    * Clique no botão "Save Text".
+    * Clique no botão "Salvar Texto".
     * ![img](./img/p1.png)  
 
 2.  **Passo 2: Escrever a Pergunta**
@@ -133,28 +133,28 @@ A aplicação guia o usuário através de um processo de três passos principais
     * O "Contexto Salvo" será exibido para referência.
     * Abaixo, a seção "2. Escreva sua pergunta:" aparecerá.
     * Digite sua pergunta relacionada ao contexto no campo fornecido.
-    * Clique no botão "Ask".
-    * [Local para Imagem: Tela mostrando o contexto salvo e a área para inserir a pergunta]
+    * Clique no botão "Perguntar".
+    * ![img](./img/p2.png)  
 
 3.  **Passo 3: Visualizar a Resposta**
-    * Após clicar em "Ask", a aplicação mostrará "Analisando sua pergunta com a API...".
+    * Após clicar em "Perguntar", a aplicação mostrará "Analisando sua pergunta com a API...".
     * Em seguida, a seção "3. Sua resposta:" exibirá a resposta encontrada pela IA.
     * Abaixo da resposta, você terá botões para:
         * "Fazer outra pergunta (mesmo texto)": Retorna ao Passo 2, mantendo o contexto atual.
         * "Inserir Novo Texto (Limpar Tudo)": Limpa todos os dados e retorna ao Passo 1.
-    * [Local para Imagem: Tela exibindo a resposta da IA e as opções de próximos passos]
+    * ![img](./img/p3.png)  
 
 **Funcionalidades Adicionais:**
 
 * **Ajuda/Exemplo de Uso:** Um botão no topo da página abre um modal com um exemplo de texto, perguntas e respostas para demonstrar o funcionamento.
 * **Começar Novamente (Limpar Tudo):** Um botão no topo (visível a partir do Passo 2) permite limpar todos os campos e voltar ao Passo 1 a qualquer momento.
-
+*    ![img](./img/p4.png) 
+*    ![img](./img/p5.png) 
 ---
 
 ## Link para Vídeo Explicativo (Exemplo)
 
 - [Video.mp4](https://youtu.be/8sgoZhAJkr8)   
-`[Link para seu vídeo aqui, se houver]` (ex: video_demonstracao.mp4)
 
 ---
 

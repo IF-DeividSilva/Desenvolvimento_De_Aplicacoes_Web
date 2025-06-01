@@ -123,7 +123,7 @@ function App() {
             <Typography variant="body1" sx={{ p: 1, border: '1px solid lightgray', borderRadius: 1 }}>A Queda da Bastilha</Typography>
             <Typography variant="body1" sx={{ p: 1, border: '1px solid lightgray', borderRadius: 1 }}>Napoleão Bonaparte </Typography>
           </Box>
-          <Box sx={{ mt: 3, textAlign: 'right' }}><Button variant="contained" onClick={toggleHelpModal}>Close</Button></Box>
+          <Box sx={{ mt: 3, textAlign: 'right' }}><Button variant="contained" onClick={toggleHelpModal}>Sair</Button></Box>
         </Box>
       </Modal>
 
@@ -154,7 +154,7 @@ function App() {
         {currentStep === 2 && (
           <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
             <Box component="section">
-              <Typography variant="h5" component="h2" gutterBottom>2. Write your ask:</Typography>
+              <Typography variant="h5" component="h2" gutterBottom>2. Escreva sua Pergunta:</Typography>
               <TextField id="ask-input" label="Escreva seu texto aqui..." placeholder="Escreva seu texto aqui..." multiline rows={4} fullWidth value={question} onChange={(e) => setQuestion(e.target.value)} variant="outlined" sx={{ mb: 2 }} />
               <Button variant="contained" color="secondary" onClick={answering} disabled={!question.trim()}>Perguntar</Button>
             </Box>
