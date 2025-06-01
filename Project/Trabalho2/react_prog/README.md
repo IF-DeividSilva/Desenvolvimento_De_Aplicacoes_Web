@@ -12,20 +12,33 @@ Esta aplicação web robustece a experiência de aprendizado interativo, permiti
 
 A aplicação é dividida em duas partes principais que se comunicam via API RESTful: Frontend (Cliente) e Backend (Servidor API).
 
-#### 1. Frontend (React - `App.js`)
+#### 1. Frontend (React)
 
-O frontend é uma Single Page Application (SPA) construída com React e Material-UI. O arquivo principal `App.js` gerencia a interface e a lógica do cliente.
+O frontend é uma Single Page Application (SPA) construída com React e Material-UI. A lógica da interface do usuário e a orquestração dos componentes são gerenciadas principalmente no `src/App.js`.
 
 * **Estrutura de Componentes:**
-    * O componente principal `App` renderiza toda a UI e gerencia o estado global da aplicação cliente.
+    * O componente principal `App.js` atua como orquestrador, gerenciando o estado global da aplicação cliente e o fluxo de interação.
+    * A interface foi modularizada em componentes menores e mais especializados, localizados na pasta `src/components/`. Alguns exemplos incluem:
+        * `Header.js`: Exibe o título principal da aplicação.
+        * `HelpModal.js`: Gerencia o conteúdo e a exibição do modal de ajuda.
+        * `PassageInput.js`: Responsável pela interface de entrada do texto de contexto.
+        * `SavedContext.js`: Exibe o texto de contexto que foi salvo.
+        * `QuestionInput.js`: Responsável pela interface de entrada da pergunta.
+        * `AnswerDisplay.js`: Exibe a resposta da IA e as opções de continuação.
+        * `AboutSection.js`, `Footer.js`: Componentes para seções de conteúdo estático.
     * Utiliza extensivamente componentes pré-construídos do Material-UI (`Container`, `Box`, `Paper`, `Typography`, `TextField`, `Button`, `Modal`) para criar uma interface moderna, responsiva e estilizada, reduzindo a necessidade de CSS customizado extenso.
+
 * **Gerenciamento de Estado (`useState`):**
-    * Estados como `textInput`, `passage`, `question`, `answer`, `showHelpModal` e `currentStep` (para o fluxo de múltiplos passos) são gerenciados pelo hook `useState`.
-    * Atualizações nesses estados disparam re-renderizações no React, refletindo as mudanças na UI.
+    * Os estados principais da aplicação (como `textInput`, `passage`, `question`, `answer`, `showHelpModal` e `currentStep` para o fluxo de múltiplos passos) são gerenciados pelo hook `useState` no componente `App.js`.
+    * Esses estados e as funções para atualizá-los são passados como *props* para os componentes filhos relevantes. Atualizações nesses estados disparam re-renderizações no React, refletindo as mudanças na UI.
+
 * **Separação de Responsabilidades e Reutilização:**
-    * O `App.js` atualmente centraliza a renderização da UI, o gerenciamento de estado, a lógica de interação (funções como `saveText`, `answering`) e a comunicação com a API (função `fetch` em `answering`).
-    * Para maior escalabilidade, seções da UI poderiam ser extraídas em componentes menores e a lógica de API movida para módulos de serviço dedicados. No escopo atual, a estrutura é funcional.
-    * A reutilização de componentes é inerente ao uso dos elementos do Material-UI.
+    * O `App.js` concentra-se na lógica de estado e fluxo geral, além da comunicação com a API.
+    * Cada componente na pasta `src/components/` encapsula uma porção específica da UI e sua lógica de apresentação, promovendo:
+        * **Legibilidade:** Código mais fácil de entender e navegar.
+        * **Manutenção:** Alterações em uma parte específica da UI afetam primariamente seu componente dedicado.
+        * **Reutilização:** Os componentes do Material-UI são inerentemente reutilizáveis. Os componentes customizados criados também podem ser reutilizados se necessário em outras partes (embora neste projeto cada um tenha um papel bem definido no fluxo principal).
+    * A lógica de chamada à API (`fetch` na função `answering`) reside atualmente no `App.js`. Em projetos maiores, poderia ser abstraída para um módulo de serviço dedicado para maior separação e testabilidade.
 
 #### 2. Backend (API FastAPI - `main.py`)
 
@@ -56,15 +69,15 @@ O backend é uma API RESTful construída com FastAPI em Python, responsável por
 
 ### Funcionalidades
 
--   Interface de usuário moderna, intuitiva e responsiva construída com React e Material-UI.
+-   Interface de usuário moderna, intuitiva e responsiva construída com React e Material-UI, organizada em componentes reutilizáveis.
 -   Fluxo de interação guiado em múltiplos passos:
-    1.  Inserção do texto de contexto pelo usuário.
-    2.  Exibição do contexto salvo e inserção da pergunta.
-    3.  Apresentação da resposta fornecida pela IA (sem a pontuação de confiança visível ao usuário final).
+    1.  Inserção do texto de contexto pelo usuário (componente `PassageInput.js`).
+    2.  Exibição do contexto salvo (componente `SavedContext.js`) e inserção da pergunta (componente `QuestionInput.js`).
+    3.  Apresentação da resposta fornecida pela IA (componente `AnswerDisplay.js`) (sem a pontuação de confiança visível ao usuário final).
     4.  Opções para "Fazer outra pergunta (mesmo texto)" ou "Inserir Novo Texto (Limpar Tudo)".
 -   Utilização de um modelo avançado de Question Answering (Hugging Face Transformers) no backend.
 -   Extração automática de respostas diretamente do conteúdo inserido pelo usuário, processada no servidor.
--   Modal de ajuda ("Examplo de Uso") com um exemplo prático para facilitar o primeiro uso.
+-   Modal de ajuda (componente `HelpModal.js`) com um exemplo prático para facilitar o primeiro uso.
 -   Estilo visual profissional e consistente provido pelo Material-UI, com responsividade para diferentes tamanhos de tela.
 
 ---
@@ -72,14 +85,15 @@ O backend é uma API RESTful construída com FastAPI em Python, responsável por
 ## Tecnologias Utilizadas
 
 ### Frontend:
--   **React**: Biblioteca JavaScript para construção de interfaces de usuário dinâmicas.
+-   **React**: Biblioteca JavaScript para construção de interfaces de usuário dinâmicas e componentizadas.
+    * Componentes Funcionais e Hooks (`useState`).
 -   **Material-UI (MUI)**: Biblioteca de componentes React para um design moderno, responsivo e de fácil implementação, seguindo o Material Design.
 -   **JavaScript (ES6+)**: Linguagem de programação principal do frontend.
--   **HTML5 & CSS3**: Estrutura e estilização base (gerenciados pelo React e MUI, com CSS customizado em `App.css` e `index.css`).
+-   **HTML5 & CSS3**: Estrutura e estilização base (gerenciados pelo React e MUI, com CSS customizado mínimo em `App.css` e `index.css` para estilos globais como fontes e background).
 
 ### Backend e Inteligência Artificial:
 -   **Python**: Linguagem de programação principal do backend.
--   **FastAPI**: Framework web moderno e de alta performance para construir APIs com Python.
+-   **FastAPI**: Framework web moderno e de alta performance para construir APIs com Python, com validação de dados usando Pydantic.
 -   **Uvicorn**: Servidor ASGI para FastAPI.
 -   **Hugging Face `transformers`**: Biblioteca central para tarefas de NLP.
     * **Modelo de IA Escolhido:** O sistema utiliza o modelo **`deepset/roberta-base-squad2`** da Hugging Face. Este é um modelo robusto, pré-treinado em tarefas de Question Answering, capaz de identificar respostas em um texto de contexto ou indicar quando uma resposta não pode ser encontrada. A pontuação de confiança do modelo é usada internamente no backend para filtrar respostas de baixa qualidade, mas não é exibida ao usuário final.
