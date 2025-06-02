@@ -11,6 +11,7 @@ import '@tensorflow/tfjs';
  */
 const ImageUploader = () => {
   // Estado para armazenar o modelo MobileNet carregado
+  // eslint-disable-next-line no-unused-vars
   const [model, setModel] = useState(null);
   
   // Estado para armazenar a imagem selecionada (como URL base64)
@@ -67,19 +68,40 @@ const ImageUploader = () => {
    * Chamada quando o usuário clica no botão "Descobrir"
    */
   const handleClassify = async () => {
-    if (model && image) {
-      setPredictions([]); // Limpa previsões anteriores
-      setLoading(true); // Indica que o processo de classificação iniciou
+    if (image) {
+      setPredictions([]);
+      setLoading(true);
       
-      // Obtém o elemento de imagem do DOM para classificação
-      const imgElement = document.getElementById('uploaded-img');
-      
-      // Usa o modelo para classificar a imagem
-      const preds = await model.classify(imgElement);
-      
-      // Atualiza o estado com as previsões e finaliza o carregamento
-      setPredictions(preds);
-      setLoading(false);
+      try {
+        // Enviar a imagem para o backend
+        const formData = new FormData();
+        
+        // Converter base64 para blob
+        const base64Response = await fetch(image);
+        const blob = await base64Response.blob();
+        
+        // Criar um arquivo a partir do blob
+        const file = new File([blob], "uploaded-image.jpg", { type: 'image/jpeg' });
+        formData.append('file', file);
+        
+        // Fazer a requisição para o backend
+        const response = await fetch('http://127.0.0.1:8000/api/classify', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Erro na requisição: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setPredictions(data.predictions);
+        
+      } catch (error) {
+        console.error("Erro ao classificar imagem:", error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
