@@ -1,6 +1,6 @@
 # Descubra o que há em sua imagem
 
-Esta aplicação web permite que o usuário **envie uma imagem** e receba uma **análise visual feita por Inteligência Artificial**, utilizando o modelo pré-treinado **MobileNet** com **TensorFlow.js**. É uma ferramenta educacional interativa e acessível que incentiva o aprendizado por meio da curiosidade visual.
+Esta aplicação web permite que o usuário **envie uma imagem** e receba uma **análise visual feita por Inteligência Artificial**, utilizando o modelo pré-treinado **ResNet50** com **PyTorch** no backend. É uma ferramenta educacional interativa e acessível que incentiva o aprendizado por meio da curiosidade visual.
 
 ---
 
@@ -13,7 +13,7 @@ Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de
 ## Funcionalidades
 
 - Upload de imagens diretamente do dispositivo (computador ou celular)
-- Classificação automática do conteúdo da imagem
+- Classificação automática do conteúdo da imagem via backend
 - Exibição de lista com os possíveis objetos identificados e sua respectiva probabilidade
 - Interface amigável, responsiva e com foco em acessibilidade infantil
 - Visual moderno com botões intuitivos e destaque em cores educativas
@@ -24,57 +24,70 @@ Facilitar o ensino de conceitos visuais, biológicos e tecnológicos através de
 
 ## Tecnologias Utilizadas
 
+### Frontend
 - **React.js** — biblioteca para criação de interfaces de usuário interativas
 - **TailwindCSS** — framework CSS utilitário para estilização moderna
-- **JavaScript (ES6+)** — lógica e integração com o modelo de IA
-- **[TensorFlow.js](https://www.tensorflow.org/js)** — biblioteca de IA para uso no navegador
-- **[MobileNet](https://github.com/tensorflow/tfjs-models/tree/master/mobilenet)** — modelo leve de reconhecimento de imagem pré-treinado
+- **JavaScript (ES6+)** — lógica e integração com o backend
 
-### Sobre o MobileNet
+### Backend
+- **FastAPI** — framework Python para criação de APIs rápidas
+- **PyTorch** — biblioteca de deep learning para processamento de imagens
+- **[ResNet50](https://pytorch.org/vision/stable/models.html)** — modelo de rede neural para classificação de imagens
+- **ImageNet** — base de dados usada para treinamento do modelo ResNet50
 
-O **MobileNet** é um modelo de rede neural convolucional eficiente projetado especialmente para aplicações móveis e dispositivos com recursos limitados. Características principais:
+### Sobre o ResNet50 e ImageNet
 
-- **Arquitetura leve** — otimizado para funcionar em navegadores e dispositivos móveis
+O **ResNet50** é uma arquitetura de rede neural profunda com 50 camadas que revolucionou a área de reconhecimento de imagens:
+
+- **Conexões residuais** — permitem treinar redes muito mais profundas com maior eficiência
+- **Alta precisão** — treinado no dataset ImageNet com mais de 1 milhão de imagens
 - **Pré-treinado** — reconhece mais de 1000 classes de objetos diferentes
-- **Eficiência** — usa convoluções separáveis em profundidade para reduzir o tamanho do modelo
-- **Performance** — oferece boa precisão com tempo de resposta rápido
+- **Robusto** — performance estado-da-arte em várias tarefas de visão computacional
+
+**ImageNet** é um banco de dados visual projetado para uso em pesquisa de reconhecimento visual de objetos:
+- Contém mais de 14 milhões de imagens anotadas
+- Organizado de acordo com a hierarquia WordNet
+- Padrão da indústria para treinar e avaliar modelos de classificação de imagens
 
 ---
 
 ## Descrição Técnica da Implementação
 
-A aplicação foi estruturada usando componentes React para melhor organização e manutenção do código:
+A aplicação utiliza uma arquitetura cliente-servidor:
 
-1. **Carregamento do Modelo**:
-   - O modelo MobileNet é carregado assincronamente quando o componente é montado
-   - Um estado de loading é exibido ao usuário durante o carregamento
+1. **Frontend (React)**:
+   - Interface de usuário responsiva e intuitiva
+   - Upload de imagens e exibição de resultados
+   - Comunicação com backend via API REST
 
-2. **Processamento de Imagem**:
-   - A imagem enviada é convertida para formato base64
-   - Uma prévia da imagem é mostrada antes da análise
-   - O modelo TensorFlow.js processa a imagem diretamente no navegador
+2. **Backend (FastAPI/PyTorch)**:
+   - API REST implementada com FastAPI
+   - Processamento de imagens com PyTorch e ResNet50
+   - Classificação baseada no dataset ImageNet
+   - Retorno de resultados formatados para o frontend
 
-3. **Gestão de Estados**:
+3. **Processamento de Imagem**:
+   - A imagem enviada é convertida para formato adequado para o modelo
+   - O modelo ResNet50 processa a imagem no servidor
+   - Os resultados são enviados de volta ao frontend
+
+4. **Gestão de Estados**:
    - Estados React são usados para controlar o fluxo da aplicação
    - Feedback visual é fornecido em cada etapa (carregando, analisando, resultados)
 
-4. **Interface do Usuário**:
-   - Design responsivo adaptado para diferentes dispositivos
-   - Elementos visuais com foco em usabilidade infantil
-   - Feedback visual claro para cada ação do usuário
-
 5. **Otimizações**:
    - Código totalmente comentado para facilitar manutenção
-   - Componente reutilizável para análise de imagens
-   - Tratamento de erros para melhor experiência do usuário
+   - Tratamento de erros tanto no frontend quanto no backend
+   - Servidor configurado com CORS para comunicação segura
 
 ---
 
 ## Como Funciona
 
 1. O usuário **escolhe uma imagem** do dispositivo
-2. A IA **processa e classifica** a imagem com base em sua base de dados de reconhecimento
-3. Os **resultados são exibidos** na tela com uma lista de objetos reconhecidos e suas probabilidades
+2. A imagem é **enviada para o backend** através de uma requisição HTTP
+3. O backend **processa e classifica** a imagem usando ResNet50 e ImageNet
+4. Os **resultados são exibidos** na tela com uma lista de objetos reconhecidos e suas probabilidades
 
 ---
 
@@ -82,44 +95,48 @@ A aplicação foi estruturada usando componentes React para melhor organização
 
 ### Pré-requisitos
 
-- **Node.js** (versão 14.x ou superior)
+- **Node.js** (versão 14.x ou superior) para o frontend
+- **Python 3.8+** para o backend
 - **npm** (6.x ou superior) ou **yarn** (1.22.x ou superior)
 - Navegador moderno (Chrome, Firefox, Edge ou Safari)
-- Editor de código (recomendado: VS Code)
-- Git (opcional, para clonar o repositório)
 
-### Método 1: Versão HTML/JS Simples
+### Método 1: Configuração do Backend
 
-Esta versão é mais leve e não requer a instalação de dependências ou servidores.
-
-1. **Baixe os arquivos**:
-   - Clone o repositório: `git clone [URL-DO-REPOSITÓRIO]`
-   - Ou baixe o ZIP e extraia em uma pasta
-
-2. **Estrutura de arquivos**:
+1. **Prepare o ambiente**:
+   ```bash
+   # Entre na pasta do backend
+   cd backend
+   
+   # Crie um ambiente virtual Python
+   python -m venv venv
+   
+   # Ative o ambiente virtual
+   # Windows:
+   venv\Scripts\activate
+   # Linux/Mac:
+   source venv/bin/activate
+   
+   # Instale as dependências
+   pip install -r requirements.txt
    ```
-   /projeto
-   ├── index.html        # Página principal
-   ├── style.css         # Estilos da aplicação
-   ├── script.js         # Lógica do TensorFlow.js e interações
-   └── /assets           # Imagens e recursos estáticos
+
+2. **Estrutura do backend**:
+   ```
+   /backend
+   ├── /app
+   │   ├── /ai_service     # Tratamento da ia
+   │   ├── /main           # Implementaçao geral
+   ├── requirements.txt    # Necessidades do backend
+   └── .env                # Variáveis de ambiente
    ```
 
-3. **Execute localmente**:
-   - Abra o arquivo index.html diretamente em seu navegador
-   - Ou utilize um servidor local simples:
-     - Python: `python -m http.server 8000`
-     - Node.js: `npx serve`
+3. **Execute o backend**:
+   ```bash
+   # Inicie o servidor
+   uvicorn app.main:app --reload
+   ```
 
-4. **Uso da aplicação**:
-   - Aguarde o carregamento do modelo (mensagem "🔍 Descobrir" indica quando está pronto)
-   - Clique no botão de upload para selecionar uma imagem
-   - Clique em "Descobrir" para iniciar a análise
-   - Visualize os resultados na lista de previsões
-
-### Método 2: Versão React (Frontend)
-
-Esta versão oferece uma experiência mais completa e moderna, com componentes reutilizáveis e estado gerenciado.
+### Método 2: Configuração do Frontend
 
 1. **Clone e configure**:
    ```bash
@@ -169,7 +186,7 @@ Esta versão oferece uma experiência mais completa e moderna, com componentes r
    - A aplicação será recarregada automaticamente se você editar os arquivos fonte
 
 5. **Uso da aplicação**:
-   - O modelo MobileNet será carregado automaticamente ao iniciar
+   - O modelo ResNet50 será carregado automaticamente ao iniciar
    - Use o botão de upload para selecionar uma imagem do seu dispositivo
    - Clique em "Descobrir" para processar a análise
    - Visualize os resultados com as previsões e probabilidades
@@ -184,40 +201,17 @@ Esta versão oferece uma experiência mais completa e moderna, com componentes r
    - Os arquivos otimizados serão gerados na pasta `/build`
    - Você pode servir estes arquivos em qualquer servidor web estático
 
-### Método 3: Configuração Completa (Frontend + Backend)
+### Método 3: Execução Completa (Frontend + Backend)
 
 Para casos que necessitam armazenamento de dados ou processamento no servidor:
 
-1. **Configure o Frontend**:
-   - Siga as instruções da Versão React acima
+1. **Configure o Backend**:
+   - Siga as instruções da Configuração do Backend acima
 
-2. **Configure o Backend** (opcional, para armazenamento de imagens):
-   ```bash
-   # Entre na pasta do backend
-   cd backend
-   
-   # Instale as dependências
-   npm install
-   # ou
-   yarn install
-   
-   # Inicie o servidor
-   npm run dev
-   # ou
-   yarn dev
-   ```
+2. **Configure o Frontend**:
+   - Siga as instruções da Configuração do Frontend acima
 
-3. **Estrutura do backend**:
-   ```
-   /backend
-   ├── /app
-   │   ├── /ai_service     # Tratamento da ia
-   │   ├── /main           # Implementaçao geral
-   ├── requirements.txt    # Necessidades do backend
-   └── .env                # Variáveis de ambiente
-   ```
-
-4. **Para desenvolvimento integrado**:
+3. **Para desenvolvimento integrado**:
    - Frontend: `http://localhost:3000`
    - Backend API: `http://localhost:8000/api`
    - As requisições do frontend para o backend são redirecionadas pelo proxy configurado no `package.json`
@@ -259,7 +253,7 @@ Explica ao usuário, de forma simples, como usar a ferramenta: enviar uma imagem
 ---
 
 ### 2. Upload e Botão de Análise
-Interface com o botão de upload e o botão de análise ("🔍 Descobrir"). O modelo MobileNet é carregado em segundo plano.
+Interface com o botão de upload e o botão de análise ("🔍 Descobrir"). O modelo ResNet50 é carregado em segundo plano.
 ![Botao Image](markdownImage/foto2.png)
 
 Exemplo de resultados juntamente com as análises.
@@ -298,27 +292,80 @@ Esta ferramenta pode ser usada em:
 O componente principal `ImageUploader` implementa as seguintes funcionalidades:
 
 ```javascript
-// Carregamento do modelo MobileNet
+// Carregamento do modelo ResNet50
 useEffect(() => {
   async function loadModel() {
-    const loadedModel = await mobilenet.load();
-    setModel(loadedModel);
+    const response = await fetch('http://localhost:8000/api/load_model');
+    const data = await response.json();
+    setModel(data.model);
     setLoading(false);
   }
   loadModel();
 }, []);
 
-// Classificação da imagem
+// Envio da imagem para o backend
 const handleClassify = async () => {
-  if (model && image) {
+  if (image) {
     setPredictions([]);
     setLoading(true);
-    const imgElement = document.getElementById('uploaded-img');
-    const preds = await model.classify(imgElement);
-    setPredictions(preds);
-    setLoading(false);
+    
+    try {
+      // Converter base64 para blob
+      const base64Response = await fetch(image);
+      const blob = await base64Response.blob();
+      
+      // Criar FormData para enviar a imagem
+      const formData = new FormData();
+      formData.append('file', blob, 'image.jpg');
+      
+      // Fazer a requisição para o backend
+      const response = await fetch('http://127.0.0.1:8000/api/classify', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setPredictions(data.predictions);
+      } else {
+        console.error('Erro na classificação');
+      }
+    } catch (error) {
+      console.error("Erro ao classificar imagem:", error);
+    } finally {
+      setLoading(false);
+    }
   }
 };
+```
+
+Backend - Processamento com ResNet50:
+
+```python
+# Classificação da imagem usando PyTorch e ResNet50
+def classify_image(image):
+    # Preparar a imagem para o modelo
+    input_tensor = preprocess(image)
+    
+    # Realizar a inferência
+    with torch.no_grad():
+        output = model(input_tensor)
+    
+    # Processar as probabilidades com softmax
+    probabilities = torch.nn.functional.softmax(output[0], dim=0)
+    
+    # Obter as 5 classes mais prováveis
+    top5_prob, top5_catid = torch.topk(probabilities, 5)
+    
+    # Formatar os resultados
+    results = []
+    for i in range(top5_prob.size(0)):
+        results.append({
+            "className": categories[top5_catid[i]],
+            "probability": top5_prob[i].item()
+        })
+    
+    return results
 ```
 
 O código completo está amplamente comentado para facilitar o entendimento e manutenção.
@@ -359,3 +406,5 @@ Este vídeo de 30 segundos demonstra o funcionamento da aplicação, desde o upl
 ## Licença
 
 Este projeto é de uso livre para fins educacionais e acadêmicos.
+
+---

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import * as mobilenet from '@tensorflow-models/mobilenet';
-import '@tensorflow/tfjs';
 
 /**
  * Componente ImageUploader
@@ -32,10 +30,10 @@ const ImageUploader = () => {
    */
   useEffect(() => {
     async function loadModel() {
-      // Carrega o modelo MobileNet do TensorFlow.js
-      const loadedModel = await mobilenet.load();
-      setModel(loadedModel);
-      setLoading(false); // Atualiza o estado para indicar que o modelo está pronto
+      // Comentado porque não estamos usando o modelo diretamente
+      // const loadedModel = await mobilenet.load();
+      // setModel(loadedModel);
+      setLoading(false); // Apenas marca como carregado
     }
     loadModel();
   }, []);
@@ -64,7 +62,7 @@ const ImageUploader = () => {
   };
 
   /**
-   * Função para classificar a imagem usando o modelo MobileNet
+   * Função para classificar a imagem usando a API 
    * Chamada quando o usuário clica no botão "Descobrir"
    */
   const handleClassify = async () => {
