@@ -39,11 +39,6 @@ app.add_middleware(
 
 # --- Carregamento do Modelo de Q&A ---
 # Carregue o modelo uma vez quando a aplicação iniciar para evitar recarregá-lo a cada requisição.
-# Escolha um modelo: https://huggingface.co/models?pipeline_tag=question-answering
-# Exemplos:
-# - 'distilbert-base-cased-distilled-squad' (mais leve)
-# - 'bert-large-uncased-whole-word-masking-finetuned-squad' (bom desempenho)
-# - 'deepset/roberta-base-squad2' (bom com perguntas sem resposta no texto)
 try:
     print("Carregando modelo de Q&A...")
     # Usaremos um modelo que pode indicar se a resposta não está no texto
