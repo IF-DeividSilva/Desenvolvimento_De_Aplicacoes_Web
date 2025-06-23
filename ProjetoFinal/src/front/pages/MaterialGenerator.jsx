@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -10,6 +11,7 @@ import {
   Select,
   Stack,
   Text,
+  Textarea, // Adicione esta linha
   useToast,
   VStack,
   HStack,
@@ -20,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import ReactMarkdown from 'react-markdown';
 import contentService from '../services/contentService';
+import api from '../services/api';
 
 const MaterialGenerator = () => {
   const [formData, setFormData] = useState({
@@ -31,7 +34,68 @@ const MaterialGenerator = () => {
   const [generatedText, setGeneratedText] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [materialId, setMaterialId] = useState(null);
   const toast = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Verificar se estamos em modo de edição ao carregar o componente
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const id = queryParams.get('id');
+    
+    if (id) {
+      setMaterialId(id);
+      setIsEditMode(true);
+      fetchMaterialDetails(id);
+    }
+  }, [location]);
+
+  // Função para buscar detalhes do material
+  const fetchMaterialDetails = async (id) => {
+    try {
+      setIsLoading(true);
+      
+      const response = await api.get(`/materiais/${id}`);
+      const material = response.data;
+      
+      // Preencher o formulário com os dados do material
+      setFormData({
+        materia: material.materia || '',
+        nivel: material.nivel || '',
+        topico: material.tema || '',
+      });
+      
+      // Definir o texto gerado
+      setGeneratedText({
+        id: material.id,
+        tema: material.tema,
+        conteudo: material.conteudo,
+        materia: material.materia,
+        nivel: material.nivel
+      });
+      
+      toast({
+        title: 'Material carregado',
+        description: 'O material foi carregado para edição',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Erro ao buscar material:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível carregar o material para edição',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -45,23 +109,49 @@ const MaterialGenerator = () => {
     setIsLoading(true);
     
     try {
-      const result = await contentService.generateSupportText(
-        formData.materia,
-        formData.nivel,
-        formData.topico
-      );
-      
-      setGeneratedText(result);
-      toast({
-        title: 'Material gerado com sucesso!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      if (isEditMode) {
+        // Atualizar material existente
+        const updatedMaterial = await api.put(`/materiais/${materialId}`, {
+          tema: formData.topico,
+          materia: formData.materia,
+          nivel: formData.nivel,
+          conteudo: generatedText?.conteudo || ''
+        });
+        
+        setGeneratedText({
+          id: updatedMaterial.data.id,
+          tema: updatedMaterial.data.tema,
+          conteudo: updatedMaterial.data.conteudo,
+          materia: updatedMaterial.data.materia,
+          nivel: updatedMaterial.data.nivel
+        });
+        
+        toast({
+          title: 'Material atualizado com sucesso!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        // Criar novo material
+        const result = await contentService.generateSupportText(
+          formData.materia,
+          formData.nivel,
+          formData.topico
+        );
+        
+        setGeneratedText(result);
+        toast({
+          title: 'Material gerado com sucesso!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
-      console.error('Erro ao gerar material:', error);
+      console.error('Erro ao processar material:', error);
       toast({
-        title: 'Erro ao gerar material',
+        title: `Erro ao ${isEditMode ? 'atualizar' : 'gerar'} material`,
         description: error.response?.data?.detail || 'Ocorreu um erro ao processar sua solicitação',
         status: 'error',
         duration: 5000,
@@ -98,11 +188,21 @@ const MaterialGenerator = () => {
     }
   };
 
+  // Função para atualizar o conteúdo do material
+  const handleContentChange = (e) => {
+    if (generatedText) {
+      setGeneratedText({
+        ...generatedText,
+        conteudo: e.target.value
+      });
+    }
+  };
+
   return (
     <Container maxW="container.xl" py={8}>
       <VStack spacing={8} align="stretch">
         <Heading as="h1" size="xl" textAlign="center">
-          Gerador de Material Didático
+          {isEditMode ? 'Editar Material Didático' : 'Gerador de Material Didático'}
         </Heading>
         
         <Card>
@@ -157,10 +257,10 @@ const MaterialGenerator = () => {
                   type="submit" 
                   colorScheme="blue" 
                   isLoading={isLoading}
-                  loadingText="Gerando material..."
+                  loadingText={isEditMode ? "Atualizando material..." : "Gerando material..."}
                   size="lg"
                 >
-                  Gerar Material
+                  {isEditMode ? 'Atualizar Material' : 'Gerar Material'}
                 </Button>
               </Stack>
             </form>
@@ -173,55 +273,66 @@ const MaterialGenerator = () => {
               <Heading as="h2" size="lg" mb={4} color="blue.700" textAlign="center">
                 {generatedText.tema}
               </Heading>
-              <Box 
-                borderWidth={1} 
-                borderRadius="md" 
-                p={6} 
-                bg="white"
-                minHeight="400px"
-                overflowY="auto"
-                boxShadow="sm"
-                className="educational-content"
-              >
-                <ReactMarkdown 
-                  components={{
-                    h1: ({node, ...props}) => <Heading as="h1" size="xl" mt={6} mb={4} color="blue.600" {...props} />,
-                    h2: ({node, ...props}) => <Heading as="h2" size="lg" mt={5} mb={3} color="blue.500" {...props} />,
-                    h3: ({node, ...props}) => <Heading as="h3" size="md" mt={4} mb={2} color="blue.400" {...props} />,
-                    p: ({node, ...props}) => <Text fontSize="md" lineHeight="tall" mb={4} {...props} />,
-                    ul: ({node, ...props}) => <Box as="ul" pl={5} my={4} {...props} />,
-                    ol: ({node, ...props}) => <Box as="ol" pl={5} my={4} {...props} />,
-                    li: ({node, ...props}) => <Box as="li" pb={1} fontSize="md" {...props} />,
-                    strong: ({node, ...props}) => <Text as="span" fontWeight="bold" color="blue.700" {...props} />,
-                    em: ({node, ...props}) => <Text as="span" fontStyle="italic" {...props} />,
-                  }}
+              {isEditMode ? (
+                <FormControl>
+                  <FormLabel>Conteúdo do Material</FormLabel>
+                  <Textarea 
+                    value={generatedText.conteudo || ''} 
+                    onChange={handleContentChange}
+                    minHeight="400px"
+                    p={4}
+                    fontFamily="monospace"
+                  />
+                </FormControl>
+              ) : (
+                <Box 
+                  borderWidth={1} 
+                  borderRadius="md" 
+                  p={4} 
+                  bg="gray.50"
+                  maxHeight="60vh"
+                  overflowY="auto"
                 >
-                  {generatedText.conteudo}
-                </ReactMarkdown>
-              </Box>
+                  <ReactMarkdown>{generatedText.conteudo}</ReactMarkdown>
+                </Box>
+              )}
             </CardBody>
             <Divider />
             <CardFooter>
-              <HStack spacing={4} justifyContent="center" width="100%">
-                <Button 
-                  onClick={() => handleExport('pdf')}
-                  colorScheme="red" 
-                  isLoading={isExporting}
-                  variant="outline"
-                  leftIcon={<i className="fas fa-file-pdf"></i>}
-                >
-                  Exportar como PDF
-                </Button>
-                <Button 
-                  onClick={() => handleExport('docx')}
-                  colorScheme="blue" 
-                  isLoading={isExporting}
-                  variant="outline"
-                  leftIcon={<i className="fas fa-file-word"></i>}
-                >
-                  Exportar como DOCX
-                </Button>
-              </HStack>
+              <VStack spacing={4} width="100%">
+                <HStack spacing={4} justifyContent="center" width="100%">
+                  <Button 
+                    onClick={() => handleExport('pdf')}
+                    colorScheme="red" 
+                    isLoading={isExporting}
+                    variant="outline"
+                    leftIcon={<i className="fas fa-file-pdf"></i>}
+                  >
+                    Exportar como PDF
+                  </Button>
+                  <Button 
+                    onClick={() => handleExport('docx')}
+                    colorScheme="blue" 
+                    isLoading={isExporting}
+                    variant="outline"
+                    leftIcon={<i className="fas fa-file-word"></i>}
+                  >
+                    Exportar como DOCX
+                  </Button>
+                </HStack>
+                
+                {/* Mantém o botão de salvar alterações em uma linha separada quando estiver em modo de edição */}
+                {isEditMode && (
+                  <Button 
+                    colorScheme="green"
+                    onClick={handleSubmit}
+                    isLoading={isLoading}
+                    alignSelf="center"
+                  >
+                    Salvar Alterações
+                  </Button>
+                )}
+              </VStack>
             </CardFooter>
           </Card>
         )}

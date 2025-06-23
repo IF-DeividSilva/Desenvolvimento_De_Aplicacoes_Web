@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -52,6 +53,7 @@ import {
 import { DragHandleIcon, DeleteIcon, EditIcon, AddIcon, DownloadIcon } from '@chakra-ui/icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import contentService from '../services/contentService';
+import api from '../services/api';
 import { FaFileExport } from 'react-icons/fa';
 
 const AssessmentCreator = () => {
@@ -68,11 +70,86 @@ const AssessmentCreator = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [showAnswers, setShowAnswers] = useState(false);
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [assessmentId, setAssessmentId] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentEditQuestion, setCurrentEditQuestion] = useState(null);
   const headerRef = useRef();
-
   const toast = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Verificar se estamos em modo de edição ao carregar o componente
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const id = queryParams.get('id');
+    
+    if (id) {
+      setAssessmentId(id);
+      setIsEditMode(true);
+      fetchAssessmentDetails(id);
+    }
+  }, [location]);
+
+  // Função para buscar detalhes da avaliação
+  const fetchAssessmentDetails = async (id) => {
+    try {
+      setIsLoading(true);
+      
+      const response = await api.get(`/listas-exercicios/${id}`);
+      const assessmentData = response.data;
+      
+      console.log('Dados da avaliação recebidos:', assessmentData);
+      
+      // Preencher o formulário com os dados da avaliação
+      setFormData({
+        materia: assessmentData.materia || '',
+        nivel: assessmentData.nivel_dificuldade || '',
+        topico: assessmentData.titulo?.split(':')[1]?.trim() || assessmentData.titulo || '',
+        quantidade_exercicios: assessmentData.exercicios?.length || 5,
+        dificuldade: mapDificuldade(assessmentData.nivel_dificuldade)
+      });
+      
+      // Definir a avaliação carregada
+      setAssessment({
+        id: assessmentData.id,
+        titulo: assessmentData.titulo,
+        materia: assessmentData.materia,
+        nivel_dificuldade: assessmentData.nivel_dificuldade,
+        cabecalho: assessmentData.cabecalho || '',
+        instrucoes: assessmentData.instrucoes || '',
+        exercicios: assessmentData.exercicios || []
+      });
+      
+      toast({
+        title: 'Avaliação carregada',
+        description: 'A avaliação foi carregada para visualização/edição',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Erro ao buscar avaliação:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível carregar a avaliação para edição',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Adicione esta função auxiliar para mapear o nível de dificuldade
+  const mapDificuldade = (nivel) => {
+    if (!nivel) return 'medio';
+    nivel = nivel.toLowerCase();
+    if (nivel.includes('fác')) return 'facil';
+    if (nivel.includes('dif')) return 'dificil';
+    return 'medio';
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -100,36 +177,47 @@ const AssessmentCreator = () => {
     setIsLoading(true);
     
     try {
-      // Chamada para gerar a avaliação
-      const result = await contentService.generateAssessment(
-        formData.materia,
-        formData.nivel,
-        formData.topico,
-        formData.quantidade_exercicios,
-        formData.dificuldade
-      );
-      
-      setAssessment(result);
-      
-      toast({
-        title: 'Avaliação gerada com sucesso!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      
-      // Rolar para a avaliação gerada
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.getElementById('assessment-result').offsetTop - 20,
-          behavior: 'smooth'
+      if (isEditMode) {
+        // Atualizar avaliação existente
+        // Nota: Como esta funcionalidade não existe na API, vamos apenas simular
+        toast({
+          title: 'Atualização de avaliação',
+          description: 'Para modificar avaliações existentes, edite as questões individualmente',
+          status: 'info',
+          duration: 4000,
+          isClosable: true,
         });
-      }, 100);
-      
+      } else {
+        // Criar nova avaliação
+        const result = await contentService.generateAssessment(
+          formData.materia,
+          formData.nivel,
+          formData.topico,
+          formData.quantidade_exercicios,
+          formData.dificuldade
+        );
+        
+        setAssessment(result);
+        
+        toast({
+          title: 'Avaliação gerada com sucesso!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        
+        // Rolar para a avaliação gerada
+        setTimeout(() => {
+          window.scrollTo({
+            top: document.getElementById('assessment-result').offsetTop - 20,
+            behavior: 'smooth'
+          });
+        }, 100);
+      }
     } catch (error) {
-      console.error('Erro ao gerar avaliação:', error);
+      console.error('Erro ao processar avaliação:', error);
       toast({
-        title: 'Erro ao gerar avaliação',
+        title: `Erro ao ${isEditMode ? 'atualizar' : 'gerar'} avaliação`,
         description: error.response?.data?.detail || 'Ocorreu um erro ao processar sua solicitação',
         status: 'error',
         duration: 5000,
@@ -270,7 +358,7 @@ const AssessmentCreator = () => {
     <Container maxW="container.xl" py={8}>
       <VStack spacing={8} align="stretch">
         <Heading as="h1" size="xl" textAlign="center">
-          Gerador de Avaliações
+          {isEditMode ? 'Editar Avaliação' : 'Gerador de Avaliações'}
         </Heading>
         
         <Card>

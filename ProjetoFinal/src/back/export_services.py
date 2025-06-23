@@ -70,29 +70,25 @@ def gerar_docx_texto_apoio(texto: schemas.TextoGerado):
     Cria um DOCX processando o Markdown do texto de apoio.
     """
     document = Document()
-    document.add_heading(texto.tema, level=1)
-
-    for line in texto.conteudo.splitlines():
-        line = line.strip()
-        if not line:
-            document.add_paragraph()
-        elif line.startswith('## '):
-            document.add_heading(line.lstrip('## ').strip(), level=2)
-        elif line.startswith('# '):
-             document.add_heading(line.lstrip('# ').strip(), level=1)
-        elif line.startswith('* '):
-            document.add_paragraph(line.lstrip('* ').strip(), style='List Bullet')
-        elif line.startswith('- '):
-            document.add_paragraph(line.lstrip('- ').strip(), style='List Bullet')
+    titulo = document.add_heading(texto.tema, level=1)
+    titulo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    document.add_paragraph(f"Matéria: {texto.materia}", style='Intense Quote')
+    document.add_paragraph(f"Nível: {texto.nivel}", style='Intense Quote')
+    document.add_paragraph()
+    
+    # Processamento básico de markdown - implementação simplificada
+    paragrafos = texto.conteudo.split('\n\n')
+    for paragrafo in paragrafos:
+        if paragrafo.startswith('# '):
+            document.add_heading(paragrafo[2:], level=1)
+        elif paragrafo.startswith('## '):
+            document.add_heading(paragrafo[3:], level=2)
+        elif paragrafo.startswith('### '):
+            document.add_heading(paragrafo[4:], level=3)
         else:
-            p = document.add_paragraph()
-            parts = line.split('**')
-            for i, part in enumerate(parts):
-                if i % 2 == 1:
-                    p.add_run(part).bold = True
-                else:
-                    p.add_run(part)
-
+            document.add_paragraph(paragrafo)
+    
+    # Salvar em um BytesIO para retornar como arquivo
     file_stream = io.BytesIO()
     document.save(file_stream)
     file_stream.seek(0)

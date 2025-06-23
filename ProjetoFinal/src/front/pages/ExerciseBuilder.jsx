@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -34,6 +35,7 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react';
 import contentService from '../services/contentService';
+import api from '../services/api';
 
 const ExerciseBuilder = () => {
   const [formData, setFormData] = useState({
@@ -48,7 +50,74 @@ const ExerciseBuilder = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [showAnswers, setShowAnswers] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [exerciseId, setExerciseId] = useState(null);
   const toast = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Verificar se estamos em modo de edição ao carregar o componente
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const id = queryParams.get('id');
+    
+    if (id) {
+      setExerciseId(id);
+      setIsEditMode(true);
+      fetchExerciseDetails(id);
+    }
+  }, [location]);
+
+  // Função para buscar detalhes dos exercícios
+  const fetchExerciseDetails = async (id) => {
+    try {
+      setIsLoading(true);
+      
+      const response = await api.get(`/listas-exercicios/${id}`);
+      const exerciseData = response.data;
+      
+      console.log('Dados recebidos:', exerciseData);
+      
+      // Preencher o formulário com os dados dos exercícios
+      setFormData({
+        materia: exerciseData.materia || '',
+        nivel: exerciseData.nivel_dificuldade || '',
+        topico: exerciseData.titulo?.split(':')[1]?.trim() || exerciseData.titulo || '',
+        quantidade_exercicios: exerciseData.exercicios?.length || 5,
+        tipo_exercicio: exerciseData.exercicios?.[0]?.tipo === 'dissertativo' 
+          ? 'Dissertativo' 
+          : 'Múltipla Escolha'
+      });
+      
+      // Definir os exercícios gerados
+      setGeneratedExercises({
+        ...exerciseData,
+        id: exerciseData.id,
+        titulo: exerciseData.titulo,
+        nivel_dificuldade: exerciseData.nivel_dificuldade,
+        exercicios: exerciseData.exercicios || []
+      });
+      
+      toast({
+        title: 'Lista de exercícios carregada',
+        description: 'A lista foi carregada para visualização/edição',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Erro ao buscar lista de exercícios:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível carregar a lista para edição',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -69,25 +138,38 @@ const ExerciseBuilder = () => {
     setIsLoading(true);
     
     try {
-      const result = await contentService.generateExerciseList(
-        formData.materia,
-        formData.nivel,
-        formData.topico,
-        formData.quantidade_exercicios,
-        formData.tipo_exercicio
-      );
-      
-      setGeneratedExercises(result);
-      toast({
-        title: 'Exercícios gerados com sucesso!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      if (isEditMode) {
+        // Atualizar lista de exercícios existente
+        // Nota: Como esta funcionalidade não existe na API, vamos apenas simular
+        toast({
+          title: 'Atualização de exercícios',
+          description: 'Para modificar exercícios existentes, edite e salve-os individualmente',
+          status: 'info',
+          duration: 4000,
+          isClosable: true,
+        });
+      } else {
+        // Criar nova lista de exercícios
+        const result = await contentService.generateExerciseList(
+          formData.materia,
+          formData.nivel,
+          formData.topico,
+          formData.quantidade_exercicios,
+          formData.tipo_exercicio
+        );
+        
+        setGeneratedExercises(result);
+        toast({
+          title: 'Exercícios gerados com sucesso!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
-      console.error('Erro ao gerar exercícios:', error);
+      console.error('Erro ao processar exercícios:', error);
       toast({
-        title: 'Erro ao gerar exercícios',
+        title: `Erro ao ${isEditMode ? 'atualizar' : 'gerar'} exercícios`,
         description: error.response?.data?.detail || 'Ocorreu um erro ao processar sua solicitação',
         status: 'error',
         duration: 5000,
@@ -128,7 +210,7 @@ const ExerciseBuilder = () => {
     <Container maxW="container.xl" py={8}>
       <VStack spacing={8} align="stretch">
         <Heading as="h1" size="xl" textAlign="center">
-          Gerador de Exercícios
+          {isEditMode ? 'Editar Lista de Exercícios' : 'Gerador de Exercícios'}
         </Heading>
         
         <Card>
@@ -322,6 +404,16 @@ const ExerciseBuilder = () => {
               </HStack>
             </CardFooter>
           </Card>
+        )}
+        
+        {/* Se estiver em modo de edição, adicionar aviso */}
+        {isEditMode && generatedExercises && (
+          <Box bg="blue.50" p={4} borderRadius="md" mb={4}>
+            <Text>
+              Você está visualizando uma lista de exercícios existente. 
+              Para fazer alterações complexas, recomendamos gerar uma nova lista.
+            </Text>
+          </Box>
         )}
       </VStack>
     </Container>

@@ -26,21 +26,31 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session 
     """Decodifica o token JWT para obter o usuário atual."""
     credentials_exception = HTTPException(
         status_code=401,
-        detail="Não foi possível validar as credenciais",
+        detail="Credenciais inválidas",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
+        # Log para depuração
+        print(f"Verificando token: {token[:20]}...")
+        
+        # Decodifica o token
         payload = jwt.decode(token, security.SECRET_KEY, algorithms=[security.ALGORITHM])
         username: str = payload.get("sub")
+        
         if username is None:
             raise credentials_exception
-        token_data = schemas.TokenData(username=username)
-    except JWTError:
+            
+        print(f"Token válido para usuário: {username}")
+    except JWTError as e:
+        print(f"Erro ao decodificar token JWT: {str(e)}")
         raise credentials_exception
-    
-    user = crud.get_user_by_username(db, username=token_data.username)
+        
+    # Busca o usuário no banco de dados
+    user = crud.get_user_by_username(db, username=username)
     if user is None:
+        print(f"Usuário {username} não encontrado no banco de dados")
         raise credentials_exception
+        
     return user
 
 async def get_current_active_user(current_user: Annotated[schemas.User, Depends(get_current_user)]):

@@ -1,6 +1,7 @@
 from sqlalchemy import Table, Column, Integer, String, Text, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+import datetime
 
 
 from database import Base
@@ -14,11 +15,17 @@ avaliacao_exercicio_association = Table(
 
 class TextoGerado(Base):
     __tablename__ = "textos_gerados"
-
+    
     id = Column(Integer, primary_key=True, index=True)
-    tema = Column(String(255), index=True)
+    tema = Column(String, index=True)
     conteudo = Column(Text)
-    data_criacao = Column(DateTime(timezone=True), server_default=func.now())
+    materia = Column(String, nullable=True)
+    nivel = Column(String, nullable=True)
+    data_criacao = Column(DateTime, default=datetime.datetime.now)
+    
+    # Adicione estas linhas para relacionamento com usuário
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user = relationship("User", back_populates="textos")
 
     exercicios = relationship("Exercicio", back_populates="texto_associado")
 
@@ -26,11 +33,15 @@ class TextoGerado(Base):
 
 class Avaliacao(Base):
     __tablename__ = "avaliacoes"
-
+    
     id = Column(Integer, primary_key=True, index=True)
     titulo = Column(String(255), nullable=False)
     nivel_dificuldade = Column(String(100))
+    tipo = Column(String(50), default="avaliacao")  # Adicionar este campo se não existir
     data_criacao = Column(DateTime(timezone=True), server_default=func.now())
+    # Relação com usuário
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user = relationship("User", back_populates="avaliacoes")
 
     exercicios = relationship(
         "Exercicio",
@@ -66,3 +77,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(100), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
+
+    # Relacionamentos
+    textos = relationship("TextoGerado", back_populates="user")
+    avaliacoes = relationship("Avaliacao", back_populates="user")

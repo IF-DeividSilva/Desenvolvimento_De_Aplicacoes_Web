@@ -5,7 +5,8 @@ import google.generativeai as genai
 from fastapi.responses import StreamingResponse, Response
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-
+from datetime import datetime  # Adicione esta linha
+import traceback
 import models
 import schemas
 import crud
@@ -125,13 +126,25 @@ def gerar_texto_de_apoio(
         # Limpa possíveis blocos de código da resposta da IA
         cleaned_response = response.text.strip().replace("```markdown", "").replace("```", "").strip()
 
-        texto_a_salvar = schemas.TextoGeradoCreate(tema=tema, conteudo=cleaned_response)
-        return crud.create_texto_gerado(db=db, texto=texto_a_salvar)
+        # Ao criar o objeto TextoGerado, adicione o user_id
+        db_texto = models.TextoGerado(
+            tema=tema, 
+            conteudo=cleaned_response,
+            materia=request.materia,
+            nivel=request.nivel,
+            user_id=current_user.id  # Adicione esta linha
+        )
+        
+        db.add(db_texto)
+        db.commit()
+        db.refresh(db_texto)
+        
+        return db_texto
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/listas-exercicios", response_model=schemas.ListaExercicios, tags=["Geração"])
-def gerar_lista_de_exercicios(
+def gerar_lista_exercicios(
     request: schemas.GeracaoListaExerciciosRequest,
     db: Session = Depends(get_db),
     model: genai.GenerativeModel = Depends(get_generative_model),
@@ -143,7 +156,7 @@ def gerar_lista_de_exercicios(
     prompt = f"""
     Com base no tópico '{request.topico}' da matéria de '{request.materia}' para o ensino {request.nivel}, gere {request.quantidade_exercicios} exercícios do tipo '{request.tipo_exercicio}'.
 
-    Instruções de Formato OBRIGATÓRIAS:
+    Instruções de Formato:
     - Sua resposta deve ser um único objeto JSON.
     - Este objeto deve ter uma única chave: "exercicios".
     - O valor de "exercicios" deve ser uma LISTA de objetos, onde cada objeto representa um exercício.
@@ -155,66 +168,17 @@ def gerar_lista_de_exercicios(
         
         cleaned_ia_response = response.text.strip().replace("```json", "").replace("```", "").strip()
 
-        return crud.create_lista_exercicios(db=db, request=request, dados_ia=cleaned_ia_response)
+        return crud.create_lista_exercicios(
+            db=db, 
+            request=request, 
+            dados_ia=cleaned_ia_response, 
+            user_id=current_user.id,
+            tipo="exercicio"  # Especificar explicitamente o tipo como "exercicio"
+        )
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-@app.get("/textos-apoio/{texto_id}/exportar/{formato}", tags=["Exportação"])
-def exportar_texto(
-    texto_id: int,
-    formato: str = Path(..., description="Formato do arquivo: 'pdf' ou 'docx'"),
-    db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(get_current_active_user)
-):
-    """
-    Exporta um texto de apoio gerado para o formato DOCX ou PDF.
-    """
-    db_texto = crud.get_texto_gerado_by_id(db, texto_id)
-    if not db_texto:
-        raise HTTPException(status_code=404, detail="Texto de apoio não encontrado.")
-
-    filename = f"texto_apoio_{texto_id}.{formato}"
-    if formato == "pdf":
-        file_stream = export_services.gerar_pdf_texto_apoio(db_texto)
-        media_type = "application/pdf"
-    elif formato == "docx":
-        file_stream = export_services.gerar_docx_texto_apoio(db_texto)
-        media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    else:
-        raise HTTPException(status_code=400, detail="Formato inválido. Use 'pdf' ou 'docx'.")
-
-    headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
-    return StreamingResponse(file_stream, media_type=media_type, headers=headers)
-
-
-@app.get("/listas-exercicios/{lista_id}/exportar/{formato}", tags=["Exportação"])
-def exportar_lista_exercicios(
-    lista_id: int,
-    formato: str = Path(..., description="Formato do arquivo: 'pdf' ou 'docx'"),
-    db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(get_current_active_user)
-):
-    """
-    Exporta uma lista de exercícios (com gabarito) para o formato DOCX ou PDF.
-    """
-    db_lista = crud.get_lista_exercicios_by_id(db, lista_id)
-    if not db_lista:
-        raise HTTPException(status_code=404, detail="Lista de exercícios não encontrada.")
-
-    filename = f"lista_exercicios_{lista_id}.{formato}"
-    if formato == "pdf":
-        file_stream = export_services.gerar_pdf_lista_exercicios(db_lista)
-        media_type = "application/pdf"
-    elif formato == "docx":
-        file_stream = export_services.gerar_docx_lista_exercicios(db_lista)
-        media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    else:
-        raise HTTPException(status_code=400, detail="Formato inválido. Use 'pdf' ou 'docx'.")
-
-    headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
-    return StreamingResponse(file_stream, media_type=media_type, headers=headers)
 
 @app.post("/avaliacoes", response_model=schemas.ListaExercicios, tags=["Geração"])
 def gerar_avaliacao(
@@ -242,7 +206,13 @@ def gerar_avaliacao(
         
         cleaned_ia_response = response.text.strip().replace("```json", "").replace("```", "").strip()
 
-        return crud.create_lista_exercicios(db=db, request=request, dados_ia=cleaned_ia_response)
+        return crud.create_lista_exercicios(
+            db=db, 
+            request=request, 
+            dados_ia=cleaned_ia_response,
+            user_id=current_user.id,
+            tipo="avaliacao"  # Especificar explicitamente o tipo como "avaliacao"
+        )
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -315,3 +285,402 @@ async def log_requests(request, call_next):
     
     response = await call_next(request)
     return response
+@app.get("/dashboard", tags=["Usuário"])
+def get_dashboard(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    try:
+        print(f"Usuário autenticado: {current_user.username}")
+        
+        # Filtrar por textos criados pelo usuário atual
+        textos = db.query(models.TextoGerado).filter(
+            models.TextoGerado.user_id == current_user.id
+        ).all()
+        print(f"Textos encontrados: {len(textos)}")
+        
+        # Filtrar por listas de exercícios criadas pelo usuário atual
+        listas_exercicios = db.query(models.Avaliacao).filter(
+            models.Avaliacao.user_id == current_user.id,
+            models.Avaliacao.tipo == "exercicio"
+        ).all()
+        print(f"Listas de exercícios encontradas: {len(listas_exercicios)}")
+        
+        # Filtrar por avaliações criadas pelo usuário atual
+        avaliacoes = db.query(models.Avaliacao).filter(
+            models.Avaliacao.user_id == current_user.id,
+            models.Avaliacao.tipo == "avaliacao"
+        ).all()
+        print(f"Avaliações encontradas: {len(avaliacoes)}")
+
+        # Total de todos os materiais
+        listas = listas_exercicios + avaliacoes
+        
+        # Dados de exportação
+        exportacoes = 0
+        
+        # Para evitar erro em listas vazias
+        num_exercicios = 0
+        if listas:
+            for lista in listas:
+                if hasattr(lista, 'exercicios'):
+                    num_exercicios += len(lista.exercicios)
+        
+        # Todos os materiais juntos para ordenação
+        todos_materiais = textos + listas
+        materiais_recentes = sorted(
+            todos_materiais,
+            key=lambda x: getattr(x, 'data_criacao', datetime.now()),
+            reverse=True
+        )[:5]
+        
+        materiais_formatados = []
+        for m in materiais_recentes:
+            if hasattr(m, 'tema'):  # É um TextoGerado
+                item = {
+                    "id": m.id,
+                    "title": m.tema,
+                    "type": "material",
+                    "date": m.data_criacao,
+                    "discipline": m.materia if hasattr(m, 'materia') else "Geral",
+                    "content": m.conteudo if hasattr(m, 'conteudo') else None
+                }
+            else:  # É uma Avaliacao
+                item = {
+                    "id": m.id,
+                    "title": m.titulo if hasattr(m, 'titulo') else f"Lista #{m.id}",
+                    "type": "exercise" if m.tipo == "exercicio" else "assessment",
+                    "date": m.data_criacao if hasattr(m, 'data_criacao') else None,
+                    "discipline": "Geral"
+                }
+            materiais_formatados.append(item)
+
+        return {
+            "materiaisCriados": len(textos),
+            "exercicios": num_exercicios,
+            "avaliacoes": len(listas),
+            "exportacoes": exportacoes,
+            "materiaisRecentes": materiais_formatados
+        }
+    except Exception as e:
+        print(f"Erro ao processar dashboard: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Erro ao processar dashboard: {str(e)}")
+@app.get("/materiais", response_model=list[schemas.TextoGerado], tags=["Usuário"])
+def listar_materiais(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    # Filtrar por usuário logado
+    return db.query(models.TextoGerado).filter(
+        models.TextoGerado.user_id == current_user.id
+    ).all()
+
+@app.get("/listas-exercicios", response_model=list[schemas.ListaExercicios], tags=["Usuário"])
+def listar_listas_exercicios(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    # Filtrar por usuário logado e pelo tipo "exercicio"
+    return db.query(models.Avaliacao).filter(
+        models.Avaliacao.user_id == current_user.id,
+        models.Avaliacao.tipo == "exercicio"
+    ).all()
+
+@app.get("/avaliacoes", response_model=list[schemas.ListaExercicios], tags=["Usuário"])
+def listar_avaliacoes(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    # Filtrar por usuário logado e pelo tipo "avaliacao"
+    return db.query(models.Avaliacao).filter(
+        models.Avaliacao.user_id == current_user.id,
+        models.Avaliacao.tipo == "avaliacao"
+    ).all()
+
+@app.get("/textos-apoio/{texto_id}", response_model=schemas.TextoGerado, tags=["Visualização"])
+def visualizar_texto(
+    texto_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    """
+    Retorna um texto específico para visualização.
+    """
+    texto = db.query(models.TextoGerado).filter(models.TextoGerado.id == texto_id).first()
+    if not texto:
+        raise HTTPException(status_code=404, detail="Texto não encontrado")
+    
+    # Verificar se o texto pertence ao usuário atual
+    if texto.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Acesso não autorizado a este material")
+    
+    return texto
+
+@app.delete("/materiais/{material_id}", tags=["Usuário"])
+def excluir_material(
+    material_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    # Verificar se o material existe e pertence ao usuário
+    material = db.query(models.TextoGerado).filter(
+        models.TextoGerado.id == material_id,
+        models.TextoGerado.user_id == current_user.id
+    ).first()
+    
+    if not material:
+        raise HTTPException(status_code=404, detail="Material não encontrado ou não pertence a este usuário")
+    
+    # Excluir o material
+    db.delete(material)
+    db.commit()
+    
+    return {"message": "Material excluído com sucesso"}
+
+@app.delete("/listas-exercicios/{lista_id}", tags=["Usuário"])
+def excluir_lista_exercicios(
+    lista_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    # Verificar se a lista existe e pertence ao usuário
+    lista = db.query(models.Avaliacao).filter(
+        models.Avaliacao.id == lista_id,
+        models.Avaliacao.user_id == current_user.id,
+        models.Avaliacao.tipo == "exercicio"  # Supondo que há um campo para diferenciar
+    ).first()
+    
+    if not lista:
+        raise HTTPException(status_code=404, detail="Lista de exercícios não encontrada ou não pertence a este usuário")
+    
+    # Excluir a lista
+    db.delete(lista)
+    db.commit()
+    
+    return {"message": "Lista de exercícios excluída com sucesso"}
+
+@app.delete("/avaliacoes/{avaliacao_id}", tags=["Usuário"])
+def excluir_avaliacao(
+    avaliacao_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    # Verificar se a avaliação existe e pertence ao usuário
+    avaliacao = db.query(models.Avaliacao).filter(
+        models.Avaliacao.id == avaliacao_id,
+        models.Avaliacao.user_id == current_user.id,
+        models.Avaliacao.tipo == "avaliacao"  # Supondo que há um campo para diferenciar
+    ).first()
+    
+    if not avaliacao:
+        raise HTTPException(status_code=404, detail="Avaliação não encontrada ou não pertence a este usuário")
+    
+    # Excluir a avaliação
+    db.delete(avaliacao)
+    db.commit()
+    
+    return {"message": "Avaliação excluída com sucesso"}
+
+# Adicione ou corrija estes endpoints:
+
+@app.get("/textos-apoio/{texto_id}/exportar/{formato}", response_class=Response, tags=["Exportação"])
+async def exportar_texto(
+    texto_id: int,
+    formato: str,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    """
+    Exporta um texto de apoio para PDF ou DOCX.
+    """
+    try:
+        # Verificar se o texto existe
+        texto = db.query(models.TextoGerado).filter(
+            models.TextoGerado.id == texto_id,
+            models.TextoGerado.user_id == current_user.id
+        ).first()
+        
+        if not texto:
+            raise HTTPException(status_code=404, detail="Texto de apoio não encontrado")
+            
+        if formato.lower() == "pdf":
+            # Usar o serviço de geração de PDF
+            file_content = export_services.gerar_pdf_texto_apoio(texto)
+            media_type = "application/pdf"
+            filename = f"texto_apoio_{texto_id}.pdf"
+        elif formato.lower() == "docx":
+            # Usar o serviço de geração de DOCX
+            file_content = export_services.gerar_docx_texto_apoio(texto)
+            media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            filename = f"texto_apoio_{texto_id}.docx"
+        else:
+            raise HTTPException(
+                status_code=400, 
+                detail="Formato de arquivo não suportado. Use 'pdf' ou 'docx'."
+            )
+
+        # Registrar a exportação no banco de dados
+        try:
+            crud.register_export(db, current_user.id, "texto", formato.lower())
+        except Exception as e:
+            print(f"Erro ao registrar exportação: {e}")
+            
+        # Retornar o arquivo gerado
+        return Response(
+            content=file_content.getvalue(),
+            media_type=media_type,
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Erro ao exportar texto: {e}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Erro ao exportar texto: {str(e)}"
+        )
+
+@app.get("/listas-exercicios/{lista_id}/exportar/{formato}", response_class=Response, tags=["Exportação"])
+async def exportar_lista_exercicios(
+    lista_id: int,
+    formato: str,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    """
+    Exporta uma lista de exercícios ou avaliação para PDF ou DOCX.
+    """
+    try:
+        # Verificar se a lista existe
+        lista = db.query(models.Avaliacao).filter(
+            models.Avaliacao.id == lista_id,
+            models.Avaliacao.user_id == current_user.id
+        ).first()
+        
+        if not lista:
+            raise HTTPException(status_code=404, detail="Lista de exercícios não encontrada")
+            
+        # Carregar os exercícios
+        db.refresh(lista)
+            
+        if formato.lower() == "pdf":
+            # Usar o serviço de geração de PDF
+            file_content = export_services.gerar_pdf_lista_exercicios(lista)
+            media_type = "application/pdf"
+            filename = f"lista_exercicios_{lista_id}.pdf"
+        elif formato.lower() == "docx":
+            # Usar o serviço de geração de DOCX
+            file_content = export_services.gerar_docx_lista_exercicios(lista)
+            media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            filename = f"lista_exercicios_{lista_id}.docx"
+        else:
+            raise HTTPException(
+                status_code=400, 
+                detail="Formato de arquivo não suportado. Use 'pdf' ou 'docx'."
+            )
+
+        # Registrar a exportação no banco de dados
+        try:
+            crud.register_export(db, current_user.id, "exercicio", formato.lower())
+        except Exception as e:
+            print(f"Erro ao registrar exportação: {e}")
+            
+        # Retornar o arquivo gerado
+        return Response(
+            content=file_content.getvalue() if hasattr(file_content, 'getvalue') else file_content.read(),
+            media_type=media_type,
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Erro ao exportar lista de exercícios: {e}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Erro ao exportar lista de exercícios: {str(e)}"
+        )
+
+@app.put("/materiais/{material_id}", response_model=schemas.TextoGerado, tags=["Materiais"])
+def atualizar_material(
+    material_id: int,
+    material_update: schemas.TextoUpdateRequest,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    """
+    Atualiza um texto de apoio existente.
+    """
+    # Verificar se o material existe e pertence ao usuário
+    material = db.query(models.TextoGerado).filter(
+        models.TextoGerado.id == material_id,
+        models.TextoGerado.user_id == current_user.id
+    ).first()
+    
+    if not material:
+        raise HTTPException(status_code=404, detail="Material não encontrado ou não pertence a este usuário")
+    
+    # Atualizar campos
+    if material_update.tema is not None:
+        material.tema = material_update.tema
+    if material_update.materia is not None:
+        material.materia = material_update.materia
+    if material_update.nivel is not None:
+        material.nivel = material_update.nivel
+    if material_update.conteudo is not None:
+        material.conteudo = material_update.conteudo
+    
+    # Atualizar a data de modificação
+    material.data_atualizacao = datetime.now()
+    
+    db.commit()
+    db.refresh(material)
+    return material
+
+# Adicione este endpoint após os outros endpoints relacionados a materiais
+
+@app.get("/materiais/{material_id}", response_model=schemas.TextoGerado, tags=["Materiais"])
+def obter_material(
+    material_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    """
+    Recupera um texto de apoio específico pelo ID.
+    """
+    # Verificar se o material existe e pertence ao usuário
+    material = db.query(models.TextoGerado).filter(
+        models.TextoGerado.id == material_id,
+        models.TextoGerado.user_id == current_user.id
+    ).first()
+    
+    if not material:
+        raise HTTPException(status_code=404, detail="Material não encontrado ou não pertence a este usuário")
+    
+    return material
+
+@app.get("/listas-exercicios/{lista_id}", response_model=schemas.ListaExercicios, tags=["Visualização"])
+def visualizar_lista_exercicios(
+    lista_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    """
+    Retorna uma lista de exercícios específica para visualização.
+    """
+    lista = db.query(models.Avaliacao).filter(models.Avaliacao.id == lista_id).first()
+    if not lista:
+        raise HTTPException(status_code=404, detail="Lista de exercícios não encontrada")
+    
+    # Verificar se a lista pertence ao usuário atual
+    if lista.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Acesso não autorizado a este material")
+    
+    return lista

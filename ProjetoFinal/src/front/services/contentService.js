@@ -45,10 +45,11 @@ const contentService = {
       link.setAttribute('download', `texto_apoio_${textoId}.${formato}`);
       document.body.appendChild(link);
       link.click();
-      link.remove();
+      document.body.removeChild(link);
       
       return true;
     } catch (error) {
+      console.error('Erro ao exportar:', error);
       throw error;
     }
   },
@@ -66,10 +67,11 @@ const contentService = {
       link.setAttribute('download', `lista_exercicios_${listaId}.${formato}`);
       document.body.appendChild(link);
       link.click();
-      link.remove();
+      document.body.removeChild(link);
       
       return true;
     } catch (error) {
+      console.error('Erro ao exportar:', error);
       throw error;
     }
   },

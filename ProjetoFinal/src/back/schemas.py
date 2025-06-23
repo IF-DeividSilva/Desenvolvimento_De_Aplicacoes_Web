@@ -77,3 +77,9 @@ class GeracaoAvaliacaoRequest(BaseModel):
     topico: str
     quantidade_exercicios: int = 5
     dificuldade: str = "medio"
+
+class TextoUpdateRequest(BaseModel):
+    tema: Optional[str] = None
+    materia: Optional[str] = None
+    nivel: Optional[str] = None
+    conteudo: Optional[str] = None

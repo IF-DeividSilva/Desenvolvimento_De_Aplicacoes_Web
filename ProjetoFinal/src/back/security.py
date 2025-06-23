@@ -27,10 +27,13 @@ def get_password_hash(password: str) -> str:
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     """Cria um novo token de acesso JWT."""
     to_encode = data.copy()
+    
+    # Aumentar tempo de expiração para testes
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        # Aumentar para 24 horas em vez de 30 minutos
+        expire = datetime.now(timezone.utc) + timedelta(hours=24)
     
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

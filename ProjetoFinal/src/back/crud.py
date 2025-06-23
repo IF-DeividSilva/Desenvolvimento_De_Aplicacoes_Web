@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 import models
 import schemas
@@ -18,38 +17,44 @@ def create_texto_gerado(db: Session, texto: schemas.TextoGeradoCreate):
 def get_lista_exercicios_by_id(db: Session, lista_id: int):
     return db.query(models.Avaliacao).filter(models.Avaliacao.id == lista_id).first()
 
-def create_lista_exercicios(db: Session, request: schemas.GeracaoListaExerciciosRequest, dados_ia: str) -> models.Avaliacao:
+def create_lista_exercicios(db: Session, request, dados_ia: str, user_id: int = None, tipo: str = "exercicio") -> models.Avaliacao:
     """
     Cria os exercícios a partir do JSON da IA e os agrupa em uma nova Lista de Exercícios.
     """
     try:
-        dados_exercicios_lista = json.loads(dados_ia)["exercicios"]
-    except (json.JSONDecodeError, KeyError) as e:
-        print(f"ERRO ao processar JSON da IA: {e}")
-        print(f"Dados recebidos: {dados_ia}")
-        raise ValueError("A resposta da IA não continha um JSON válido com a chave 'exercicios'.")
-
-    exercicios_criados_ids = []
-    for exercicio_data in dados_exercicios_lista:
-        exercicio_schema = schemas.ExercicioCreate(**exercicio_data)
-        db_exercicio = models.Exercicio(**exercicio_schema.model_dump())
-        db.add(db_exercicio)
-        db.flush() 
-        exercicios_criados_ids.append(db_exercicio.id)
-
-    titulo_lista = f"Exercícios de {request.materia}: {request.topico}"
-    db_lista = models.Avaliacao(
-        titulo=titulo_lista,
-        nivel_dificuldade=request.nivel
-    )
-    
-    exercicios_salvos = db.query(models.Exercicio).filter(models.Exercicio.id.in_(exercicios_criados_ids)).all()
-    db_lista.exercicios.extend(exercicios_salvos)
-    
-    db.add(db_lista)
-    db.commit()
-    db.refresh(db_lista)
-    return db_lista
+        dados_dict = json.loads(dados_ia)
+        exercicios_data = dados_dict.get("exercicios", [])
+        
+        materia_valor = getattr(request, 'materia', 'Não especificado')
+        titulo_lista = f"Exercícios de {materia_valor}: {getattr(request, 'topico', 'Diversos')}"
+        
+        avaliacao_data = {
+            "titulo": titulo_lista,
+            "nivel_dificuldade": getattr(request, 'nivel', getattr(request, 'dificuldade', None)),
+            "materia": materia_valor,  # Garante que a matéria seja armazenada
+            "user_id": user_id,
+            "tipo": tipo  # Garante que o tipo seja usado corretamente
+        }
+        
+        db_lista = models.Avaliacao(**avaliacao_data)
+        db.add(db_lista)
+        db.commit()
+        db.refresh(db_lista)
+        
+        # Criar exercícios e associá-los à lista
+        for ex_data in exercicios_data:
+            db_exercicio = create_exercicio(db, ex_data)
+            db_lista.exercicios.append(db_exercicio)
+        
+        db.commit()
+        db.refresh(db_lista)
+        return db_lista
+        
+    except json.JSONDecodeError:
+        raise ValueError(f"Dados inválidos fornecidos pela IA: {dados_ia}")
+    except Exception as e:
+        db.rollback()
+        raise e
 
 
 
