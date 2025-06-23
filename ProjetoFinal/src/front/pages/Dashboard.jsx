@@ -434,14 +434,6 @@ const RecentMaterialCard = ({ title, type, date, discipline, id, content }) => (
           <Icon as={FaRegCalendarAlt} mr={1} boxSize={3} />
           {date}
         </Text>
-        <Button 
-          size="xs" 
-          colorScheme="brand" 
-          variant="outline" 
-          onClick={() => handleViewMaterial({id, title, type, content})}
-        >
-          Visualizar
-        </Button>
       </Flex>
     </CardFooter>
   </Card>

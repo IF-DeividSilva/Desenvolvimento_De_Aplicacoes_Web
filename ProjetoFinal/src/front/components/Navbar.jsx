@@ -343,7 +343,7 @@ const NAV_ITEMS = [
   },
   {
     label: 'Sobre',
-    href: '/about',
+    href: '/sobre', // Alterado de '/about' para '/sobre'
   },
 ];
 

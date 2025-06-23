@@ -9,6 +9,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   SimpleGrid,
   VStack,
   HStack,
@@ -136,32 +137,53 @@ const MaterialsLibrary = () => {
 
   // Função para pesquisar e filtrar materiais
   const getFilteredMaterials = () => {
+    // Se não houver termo de busca, aplicar apenas os outros filtros
+    if (!searchTerm || searchTerm.trim() === '') {
+      return materials.filter(material => {
+        const typeMatch = selectedFilters.type === 'all' || material.type === selectedFilters.type;
+        const disciplineMatch = selectedFilters.discipline === 'all' || 
+          material.discipline === selectedFilters.discipline;
+        const gradeLevelMatch = selectedFilters.gradeLevel === 'all' || 
+          material.gradeLevel === selectedFilters.gradeLevel;
+        
+        return typeMatch && disciplineMatch && gradeLevelMatch;
+      }).sort(sortMaterials);
+    }
+    
+    // Se houver termo de busca, aplicar busca mais abrangente
+    const searchTermLower = searchTerm.toLowerCase().trim();
+    
     return materials.filter(material => {
-      // Filtrar por termo de busca
-      const searchMatch = searchTerm.trim() === '' || 
-        material.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (material.discipline && material.discipline.toLowerCase().includes(searchTerm.toLowerCase()));
+      // Busca em vários campos
+      const titleMatch = material.title && material.title.toLowerCase().includes(searchTermLower);
+      const disciplineMatch = material.discipline && material.discipline.toLowerCase().includes(searchTermLower);
+      const descriptionMatch = material.description && material.description.toLowerCase().includes(searchTermLower);
+      const contentMatch = material.content && material.content.toLowerCase().includes(searchTermLower);
       
-      // Filtrar por tipo
+      // Considerar qualquer correspondência como resultado positivo
+      const searchMatch = titleMatch || disciplineMatch || descriptionMatch || contentMatch;
+      
+      // Aplicar os outros filtros
       const typeMatch = selectedFilters.type === 'all' || material.type === selectedFilters.type;
-      
-      // Filtrar por disciplina
-      const disciplineMatch = selectedFilters.discipline === 'all' || 
+      const disciplineFilterMatch = selectedFilters.discipline === 'all' || 
         material.discipline === selectedFilters.discipline;
-      
-      // Filtrar por nível
       const gradeLevelMatch = selectedFilters.gradeLevel === 'all' || 
         material.gradeLevel === selectedFilters.gradeLevel;
       
-      return searchMatch && typeMatch && disciplineMatch && gradeLevelMatch;
-    }).sort((a, b) => {
-      // Ordenar resultados
-      if (sortOption === 'recent') {
-        return new Date(b.updatedAt) - new Date(a.updatedAt);
-      } else {
-        return new Date(a.updatedAt) - new Date(b.updatedAt);
-      }
-    });
+      return searchMatch && typeMatch && disciplineFilterMatch && gradeLevelMatch;
+    }).sort(sortMaterials);
+  };
+
+  // Função auxiliar para ordenação
+  const sortMaterials = (a, b) => {
+    if (sortOption === 'recent') {
+      return new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0);
+    } else if (sortOption === 'oldest') {
+      return new Date(a.updatedAt || a.createdAt || 0) - new Date(b.updatedAt || b.createdAt || 0);
+    } else if (sortOption === 'alphabetical') {
+      return (a.title || '').localeCompare(b.title || '');
+    }
+    return 0;
   };
 
   const handleViewDetail = async (material) => {
@@ -316,6 +338,21 @@ const MaterialsLibrary = () => {
     }
   };
 
+  const highlightMatch = (text, searchTerm) => {
+    if (!searchTerm || !text) return text;
+    
+    const regex = new RegExp(`(${searchTerm.trim()})`, 'gi');
+    const parts = text.split(regex);
+    
+    return (
+      <>
+        {parts.map((part, i) => 
+          regex.test(part) ? <mark key={i}>{part}</mark> : part
+        )}
+      </>
+    );
+  };
+
   return (
     <Container maxW="container.xl" py={8}>
       <Heading mb={2}>Biblioteca de Materiais</Heading>
@@ -405,7 +442,15 @@ const MaterialsLibrary = () => {
             placeholder="Buscar materiais, exercícios ou avaliações..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            pr="4.5rem"
           />
+          {searchTerm && (
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={() => setSearchTerm('')}>
+                Limpar
+              </Button>
+            </InputRightElement>
+          )}
         </InputGroup>
         
         <Flex wrap="wrap" gap={4}>
@@ -471,7 +516,7 @@ const MaterialsLibrary = () => {
                     <CardBody>
                       <VStack align="start" spacing={2}>
                         <Heading size="md" onClick={() => handleViewDetail(material)} cursor="pointer">
-                          {material.title}
+                          {searchTerm ? highlightMatch(material.title, searchTerm) : material.title}
                         </Heading>
                         
                         <Text fontSize="sm" color="gray.600" noOfLines={2}>

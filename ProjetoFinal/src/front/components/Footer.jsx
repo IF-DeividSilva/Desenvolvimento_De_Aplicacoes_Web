@@ -2,92 +2,83 @@ import { Link as RouterLink } from 'react-router-dom';
 import { 
   Box, 
   Container, 
-  Grid, 
+  SimpleGrid,
   Heading, 
   Text, 
   Link, 
-  HStack,
   VStack,
-  IconButton,
-  Flex
+  Divider,
+  useColorModeValue
 } from '@chakra-ui/react';
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 
 const Footer = () => {
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const textColor = useColorModeValue("gray.600", "gray.400");
+  
   return (
-    <Box as="footer" bg="gray.50" mt={12}>
-      <Container maxW="container.xl" px={4} pt={12}>
-        <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }} gap={8} pb={8}>
+    <Box as="footer" bg={bgColor} borderTop="1px" borderColor={borderColor}>
+      <Container maxW="container.xl" py={10}>
+        <SimpleGrid 
+          templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "2fr 1fr 1fr" }}
+          spacing={{ base: 8, md: 10 }}
+        >
+          {/* Logo e descrição */}
           <Box>
-            <Heading as="h3" size="md" mb={4}>EduPlataform</Heading>
-            <Text color="gray.600" mb={4}>
-              Transformando o futuro através da educação acessível e de qualidade.
+            <Heading as="h3" size="md" mb={3} color="blue.500">EduAI</Heading>
+            <Text color={textColor} fontSize="md" maxW="90%">
+              Transformando o ensino através da inteligência artificial para educadores.
             </Text>
-            <HStack spacing={4}>
-              <SocialButton icon={<FaFacebookF />} label="Facebook" />
-              <SocialButton icon={<FaTwitter />} label="Twitter" />
-              <SocialButton icon={<FaInstagram />} label="Instagram" />
-              <SocialButton icon={<FaLinkedinIn />} label="LinkedIn" />
-            </HStack>
           </Box>
           
+          {/* Links de navegação */}
           <Box>
-            <Heading as="h4" size="sm" fontWeight="bold" mb={4}>Links rápidos</Heading>
+            <Heading as="h4" size="sm" fontWeight="600" mb={4} letterSpacing="0.5px">
+              Navegação
+            </Heading>
             <VStack align="flex-start" spacing={3}>
-              <FooterLink as={RouterLink} to="/">Home</FooterLink>
-              <FooterLink as={RouterLink} to="/courses">Cursos</FooterLink>
-              <FooterLink as={RouterLink} to="/assignments">Atividades</FooterLink>
-              <FooterLink as={RouterLink} to="/login">Login</FooterLink>
+              <FooterLink as={RouterLink} to="/">Início</FooterLink>
+              <FooterLink as={RouterLink} to="/library">Biblioteca de Materiais</FooterLink>
+              <FooterLink as={RouterLink} to="/sobre">Sobre</FooterLink>
+              <FooterLink 
+                as={RouterLink} 
+                to={localStorage.getItem('token') ? "/dashboard" : "/login"}
+              >
+                {localStorage.getItem('token') ? "Dashboard" : "Login"}
+              </FooterLink>
             </VStack>
           </Box>
           
+          {/* Contato */}
           <Box>
-            <Heading as="h4" size="sm" fontWeight="bold" mb={4}>Recursos</Heading>
-            <VStack align="flex-start" spacing={3}>
-              <FooterLink href="#">Centro de ajuda</FooterLink>
-              <FooterLink href="#">Blog educacional</FooterLink>
-              <FooterLink href="#">Parcerias</FooterLink>
-              <FooterLink href="#">FAQ</FooterLink>
+            <Heading as="h4" size="sm" fontWeight="600" mb={4} letterSpacing="0.5px">
+              Contato
+            </Heading>
+            <VStack align="flex-start" spacing={3} color={textColor}>
+              <Text fontSize="sm">Email: <Link color="blue.500" href="mailto:arthurpetroli@alunos.utfpr.edu.br">arthurpetroli@alunos.utfpr.edu.br</Link></Text>
+              <Text fontSize="sm">Telefone: (19) 98348-4303</Text>
+              <Text fontSize="sm">Endereço: R. Marcílio Dias, 635</Text>
             </VStack>
           </Box>
-          
-          <Box>
-            <Heading as="h4" size="sm" fontWeight="bold" mb={4}>Contato</Heading>
-            <VStack align="flex-start" spacing={3} color="gray.600">
-              <Text>Email: arthurpetroli@alunos.utfpr.edu.br</Text>
-              <Text>Telefone: (19) 98348-4303</Text>
-              <Text>Endereço: R. Marcílio Dias, 635</Text>
-            </VStack>
-          </Box>
-        </Grid>
+        </SimpleGrid>
       </Container>
       
-      <Box bg="white" py={4} textAlign="center" color="gray.600">
-        <Text>&copy; {new Date().getFullYear()} EduPlataform. Todos os direitos reservados.</Text>
+      <Divider borderColor={borderColor} />
+      
+      <Box py={4} textAlign="center" color={textColor}>
+        <Text fontSize="sm">&copy; {new Date().getFullYear()} EduAI. Todos os direitos reservados.</Text>
       </Box>
     </Box>
-  );
-};
-
-const SocialButton = ({ icon, label }) => {
-  return (
-    <IconButton
-      aria-label={label}
-      icon={icon}
-      bg="brand.500"
-      color="white"
-      size="md"
-      rounded="full"
-      _hover={{ bg: "brand.600" }}
-    />
   );
 };
 
 const FooterLink = ({ children, ...rest }) => {
   return (
     <Link 
+      fontSize="sm"
       color="gray.600" 
-      _hover={{ color: "brand.500" }} 
+      _hover={{ color: "blue.500", textDecoration: "none" }}
+      fontWeight="500"
       {...rest}
     >
       {children}

@@ -17,6 +17,7 @@ import MaterialsLibrary from './pages/MaterialsLibrary';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
+import About from './pages/About'; // Importando a página About
 
 // Serviços
 import authService from './services/authService';
@@ -75,6 +76,7 @@ function App() {
             <Route path="/register" element={
               isLoggedIn ? <Navigate to="/dashboard" replace /> : <Register />  /* Removida prop onLogin */
             } />
+            <Route path="/sobre" element={<About />} /> {/* Rota para a página About */}
             
             {/* Rotas protegidas */}
             <Route path="/dashboard" element={
