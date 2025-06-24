@@ -14,15 +14,22 @@ import {
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { FaRobot, FaPencilAlt, FaChalkboardTeacher, FaFileExport } from 'react-icons/fa';
+import logo from '../assets/logo(1).svg';
 
 const Home = () => {
   return (
     <Box>
       {/* Hero Section */}
-      <Box bg="brand.500" color="white" py={20}>
+      <Box bgGradient="linear(to-r, brand.600, blue.400)" py={20} color="white">
         <Container maxW="container.xl">
-          <Flex direction={{ base: 'column', lg: 'row' }} align="center">
-            <Box flex="1" pr={{ lg: 16 }} mb={{ base: 10, lg: 0 }}>
+          <Flex direction={{ base: 'column', md: 'row' }} align="center" justify="space-between">
+            <Box maxW={{ base: '100%', md: '50%' }} mb={{ base: 10, md: 0 }}>
+              <Flex align="center" mb={6}>
+                <Image src={logo} alt="EduAI Logo" boxSize="80px" mr={4} />
+                <Heading as="h1" size="2xl" mb={4}>
+                  EduAI
+                </Heading>
+              </Flex>
               <Heading 
                 as="h1" 
                 size="2xl" 

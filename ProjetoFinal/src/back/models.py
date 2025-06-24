@@ -81,3 +81,23 @@ class User(Base):
     # Relacionamentos
     textos = relationship("TextoGerado", back_populates="user")
     avaliacoes = relationship("Avaliacao", back_populates="user")
+
+
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    nickname = Column(String(100), default="Usuário")
+    profile_image = Column(String, nullable=True)
+    username = Column(String(255), nullable=True)  # Nome completo opcional
+    bio = Column(Text, nullable=True)
+    location = Column(String(255), nullable=True)
+    university = Column(String(255), nullable=True)
+    degree = Column(String(255), nullable=True)
+    grad_year = Column(String(10), nullable=True)
+    linkedin = Column(String(255), nullable=True)
+    github = Column(String(255), nullable=True)
+    
+    # Relacionamento com o usuário
+    user = relationship("User", backref="profile")

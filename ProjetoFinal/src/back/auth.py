@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 
+import models  # Adicione esta linha
 import crud
 import schemas
 import security
@@ -91,3 +92,60 @@ def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 async def read_users_me(current_user: Annotated[schemas.User, Depends(get_current_active_user)]):
     """Retorna os dados do usuário atualmente logado."""
     return current_user
+
+@router.get("/users/profile", response_model=schemas.UserProfile)
+def get_user_profile(current_user: Annotated[schemas.User, Depends(get_current_active_user)], db: Session = Depends(get_db)):
+    """Retorna o perfil do usuário logado."""
+    try:
+        # Tentar buscar o perfil existente
+        profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == current_user.id).first()
+        
+        # Se não existir, criar um novo com dados básicos
+        if not profile:
+            profile = models.UserProfile(
+                user_id=current_user.id,
+                nickname=current_user.username
+            )
+            db.add(profile)
+            db.commit()
+            db.refresh(profile)
+        
+        return profile
+    except Exception as e:
+        print(f"Erro ao buscar perfil: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
+
+# Adicionar junto aos outros endpoints
+@router.post("/users/profile", response_model=schemas.UserProfile)
+def update_user_profile(
+    profile_data: schemas.UserProfileCreate,
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db)
+):
+    """Atualiza o perfil do usuário logado."""
+    try:
+        profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == current_user.id).first()
+        
+        if not profile:
+            # Criar novo perfil
+            profile = models.UserProfile(user_id=current_user.id)
+            db.add(profile)
+        
+        # Atualizar campos
+        profile.nickname = profile_data.nickname
+        profile.profile_image = profile_data.profile_image
+        profile.username = profile_data.username
+        profile.bio = profile_data.bio
+        profile.location = profile_data.location
+        profile.university = profile_data.university
+        profile.degree = profile_data.degree
+        profile.grad_year = profile_data.grad_year
+        profile.linkedin = profile_data.linkedin
+        profile.github = profile_data.github
+        
+        db.commit()
+        db.refresh(profile)
+        return profile
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Erro ao atualizar perfil: {str(e)}")

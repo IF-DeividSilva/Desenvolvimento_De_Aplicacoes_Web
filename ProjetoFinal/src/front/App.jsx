@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
+import api from './services/api'; // Importando o serviço da API
 
 // Componentes de Layout
 import Navbar from './components/Navbar';
@@ -24,6 +25,8 @@ import authService from './services/authService';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
+  const [userProfile, setUserProfile] = useState(null);
+  const [userName, setUserName] = useState(''); // Adicionar useState para o nome de usuário
 
   useEffect(() => {
     // Verificar autenticação ao montar o componente
@@ -46,6 +49,39 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        setIsLoggedIn(true);
+        
+        // Obter dados do usuário do localStorage diretamente
+        const user = authService.getCurrentUser();
+        if (user) {
+          // Definir o nome do usuário mesmo antes de chamar a API
+          setUserName(user.username || "U");
+        }
+        
+        // Buscar perfil do usuário (não mudar o código existente)
+        try {
+          const response = await api.get('/auth/users/profile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          
+          if (response.data) {
+            setUserProfile(response.data);
+            // Usar o nickname do perfil ou o username do usuário ou "U"
+            setUserName(response.data.nickname || user?.username || "U");
+          }
+        } catch (error) {
+          console.error('Erro ao buscar perfil:', error);
+        }
+      }
+    };
+    
+    checkLoginStatus();
+  }, []);
+
   const handleLogin = (userData) => {
     console.log('Login bem-sucedido, atualizando estado', userData);
     // Atualizar estado de autenticação
@@ -64,7 +100,12 @@ function App() {
   return (
     <Router>
       <Box minH="100vh" display="flex" flexDirection="column">
-        <Navbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+        <Navbar 
+          isLoggedIn={isLoggedIn} 
+          handleLogout={handleLogout} 
+          userProfileImage={userProfile?.profile_image} 
+          userData={userName} // Passar o nome do usuário
+        />
         
         <Box flex="1">
           <Routes>

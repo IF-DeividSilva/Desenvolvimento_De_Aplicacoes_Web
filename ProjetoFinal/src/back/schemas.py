@@ -83,3 +83,23 @@ class TextoUpdateRequest(BaseModel):
     materia: Optional[str] = None
     nivel: Optional[str] = None
     conteudo: Optional[str] = None
+
+class UserProfileBase(BaseModel):
+    nickname: str
+    profile_image: Optional[str] = None
+    username: Optional[str] = None
+    bio: Optional[str] = None
+    location: Optional[str] = None
+    university: Optional[str] = None
+    degree: Optional[str] = None
+    grad_year: Optional[str] = None
+    linkedin: Optional[str] = None
+    github: Optional[str] = None
+
+class UserProfileCreate(UserProfileBase):
+    pass
+
+class UserProfile(UserProfileBase):
+    id: int
+    user_id: int
+    model_config = ConfigDict(from_attributes=True)

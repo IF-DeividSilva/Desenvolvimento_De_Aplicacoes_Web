@@ -33,6 +33,7 @@ import {
   FaLightbulb,
   FaBrain,
 } from 'react-icons/fa';
+import logo from '../assets/logo(1).svg';
 
 const About = () => {
   const bgGradient = useColorModeValue(
@@ -55,7 +56,7 @@ const About = () => {
       >
         <Container maxW="container.xl">
           <VStack spacing={6} alignItems="center" textAlign="center">
-            <Icon as={FaBrain} w={20} h={20} color="blue.500" />
+            <Image src={logo} alt="EduAI Logo" boxSize="120px" />
             <Heading as="h1" size="2xl" mb={4}>
               EduAI - Transformando a Educação com Inteligência Artificial
             </Heading>

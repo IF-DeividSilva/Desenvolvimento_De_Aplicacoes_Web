@@ -21,7 +21,8 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider
+  MenuDivider,
+  Image
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
@@ -29,9 +30,10 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
-import logo from '../assets/education-logo.svg';
+// Modificar o import do logo
+import logo from '../assets/logo(1).svg';
 
-const Navbar = ({ isLoggedIn, handleLogout }) => {
+const Navbar = ({ isLoggedIn, handleLogout, userProfileImage, userData }) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -46,44 +48,49 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}
-        justifyContent="space-between"
+        justify={'space-between'}
+        width="100%"
       >
-        <Flex
-          flex={{ base: 1, md: 'auto' }}
-          ml={{ base: -2 }}
-          display={{ base: 'flex', md: 'none' }}>
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={'ghost'}
-            aria-label={'Toggle Navigation'}
-          />
-        </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Text
-            as={RouterLink}
-            to="/"
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}
-            fontWeight="bold"
-            fontSize="xl"
-          >
-            EduAI
-          </Text>
-
-          <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+        {/* Logo e links de navegação juntos à esquerda */}
+        <Flex align="center" flex={1}>
+          <RouterLink to="/">
+            <Flex align="center" mr={8}>
+              {/* Modificar o componente de imagem */}
+              <Image src={logo} alt="EduAI Logo" boxSize="32px" mr={2} />
+              <Text
+                fontFamily={'heading'}
+                color={useColorModeValue('gray.800', 'white')}
+                fontWeight="bold"
+                fontSize="lg"
+              >
+                EduAI
+              </Text>
+            </Flex>
+          </RouterLink>
+          
+          {/* Links de navegação ao lado do logo */}
+          <Flex display={{ base: 'none', md: 'flex' }}>
             <DesktopNav isLoggedIn={isLoggedIn} />
           </Flex>
         </Flex>
 
+        {/* IconButton para menu mobile */}
+        <IconButton
+          display={{ base: 'flex', md: 'none' }}
+          onClick={onToggle}
+          icon={
+            isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
+          }
+          variant={'ghost'}
+          aria-label={'Toggle Navigation'}
+        />
+
+        {/* Avatar ou botões de login à direita */}
         <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={'flex-end'}
           direction={'row'}
-          spacing={6}>
+          spacing={6}
+          flex="0 0 auto"
+        >
           {isLoggedIn ? (
             <Menu>
               <MenuButton
@@ -94,7 +101,10 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
                 minW={0}>
                 <Avatar
                   size={'sm'}
-                  src={'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80'}
+                  src={userProfileImage || undefined}
+                  name={userData || "U"} // Se userData estiver vazio, usar a primeira letra do usuário
+                  bg="teal.500" // Cor igual à do seu perfil
+                  color="white"
                 />
               </MenuButton>
               <MenuList>
@@ -107,10 +117,10 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
             </Menu>
           ) : (
             <Stack
-              flex={{ base: 1, md: 0 }}
-              justify={'flex-end'}
               direction={'row'}
-              spacing={6}>
+              spacing={6}
+              justify={'flex-end'}
+            >
               <Button
                 as={RouterLink}
                 fontSize={'sm'}

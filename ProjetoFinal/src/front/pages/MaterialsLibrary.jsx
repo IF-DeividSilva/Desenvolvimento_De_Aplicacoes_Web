@@ -69,6 +69,8 @@ const MaterialsLibrary = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [materials, setMaterials] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  // Adicione um novo estado para controlar quando os filtros foram alterados
+  const [filterChanged, setFilterChanged] = useState(false);
 
   // Carregar materiais ao montar o componente
   useEffect(() => {
@@ -353,6 +355,22 @@ const MaterialsLibrary = () => {
     );
   };
 
+  // Modifique a função onde você altera o estado dos filtros
+  const handleFilterChange = (filterType, value) => {
+    setSelectedFilters(prev => {
+      const newFilters = { ...prev, [filterType]: value };
+      // Force o re-render explicitamente
+      setFilterChanged(!filterChanged);
+      return newFilters;
+    });
+  };
+
+  // Adicione um useEffect para reagir às mudanças de filtro
+  useEffect(() => {
+    // Este efeito será executado toda vez que os filtros forem alterados
+    // Não é necessário fazer nada aqui, apenas forçar uma re-renderização
+  }, [selectedFilters, filterChanged]);
+
   return (
     <Container maxW="container.xl" py={8}>
       <Heading mb={2}>Biblioteca de Materiais</Heading>
@@ -457,7 +475,7 @@ const MaterialsLibrary = () => {
           <Select 
             placeholder="Tipo"
             value={selectedFilters.type}
-            onChange={(e) => setSelectedFilters({...selectedFilters, type: e.target.value})}
+            onChange={(e) => handleFilterChange('type', e.target.value)}
             maxW="200px"
           >
             <option value="all">Todos os tipos</option>
